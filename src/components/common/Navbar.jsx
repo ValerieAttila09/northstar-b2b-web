@@ -123,16 +123,7 @@ export default function Navbar() {
         .to(menuPanelRef.current, { autoAlpha: 1, yPercent: 0, duration: 0.72 })
         .to(".mobile-menu-line-x", { scaleX: 1, duration: 0.65, stagger: 0.04 }, "-=0.35")
         .to(".mobile-menu-line-y", { scaleY: 1, duration: 0.65, stagger: 0.04 }, "<")
-        .to(
-          ".mobile-menu-item",
-          {
-            yPercent: 0,
-            autoAlpha: 1,
-            duration: 0.82,
-            stagger: 0.075
-          },
-          "-=0.38"
-        );
+        .to(".mobile-menu-item", { yPercent: 0, autoAlpha: 1, duration: 0.82, stagger: 0.075 }, "-=0.38");
     });
 
     return () => ctx.revert();
@@ -197,7 +188,7 @@ export default function Navbar() {
   return (
     <>
       <header ref={headerRef} className="fixed left-0 top-0 z-[90] w-full border-b border-line bg-bone/78 backdrop-blur-xl">
-        <nav className="relative mx-auto grid max-w-[1600px] grid-cols-[1fr_auto_1fr] items-center px-5 py-4 md:px-8">
+        <nav className="relative mx-auto flex justify-between max-w-[1600px] items-center px-5 py-4 md:px-8">
           <a ref={logoRef} href="#" className="relative z-[92] font-display text-2xl leading-none">
             Northstar
           </a>
@@ -242,16 +233,16 @@ export default function Navbar() {
 
       <div
         ref={menuPanelRef}
-        className="fixed inset-0 z-[80] min-h-screen overflow-hidden bg-charcoal pt-[73px] text-inverse lg:hidden"
+        className="fixed inset-0 z-[80] min-h-screen overflow-hidden bg-charcoal pt-[76px] lg:hidden"
         aria-hidden={!menuOpen}
       >
-        <span className="mobile-menu-line-x absolute left-0 top-[73px] h-px w-full bg-inverse/18" />
-        <span className="mobile-menu-line-x absolute bottom-24 left-0 h-px w-full bg-inverse/18" />
-        <span className="mobile-menu-line-y absolute left-5 top-[73px] h-[calc(100%-73px)] w-px bg-inverse/14 md:left-8" />
-        <span className="mobile-menu-line-y absolute right-5 top-[73px] h-[calc(100%-73px)] w-px bg-inverse/14 md:right-8" />
+        <span className="mobile-menu-line-x absolute left-0 top-[76px] h-px w-full bg-inverse/20" />
+        <span className="mobile-menu-line-x absolute bottom-4 left-0 h-px w-full bg-inverse/20" />
+        <span className="mobile-menu-line-y absolute left-5 top-[76px] h-[calc(100%-76px)] w-px bg-inverse/20 md:left-8" />
+        <span className="mobile-menu-line-y absolute right-5 top-[76px] h-[calc(100%-76px)] w-px bg-inverse/20 md:right-8" />
 
-        <div className="mx-5 flex h-[calc(100vh-73px)] flex-col justify-between border-x border-inverse/14 px-5 py-8 md:mx-8 md:px-8">
-          <div>
+        <div className="mx-5 flex h-[calc(100vh-76px)] flex-col justify-between border-x border-inverse/20 px-5 py-8 md:mx-8 md:px-8">
+          <div className="text-inverse">
             <div className="mb-8 overflow-hidden">
               <p className="mobile-menu-item text-micro font-bold uppercase text-inverse/48">
                 Navigation / Northstar
@@ -266,7 +257,7 @@ export default function Navbar() {
                     onClick={closeMenu}
                     onMouseMove={(event) => moveElement(event, menuLinkRefs.current[index], 0.35)}
                     onMouseLeave={() => resetElement(menuLinkRefs.current[index])}
-                    className="mobile-menu-item block font-display text-[13vw] leading-[0.92] text-inverse sm:text-[12vw] md:text-8xl"
+                    className="mobile-menu-item block font-display text-[13vw] leading-[0.92] text-inverse sm:text-[12vw] md:text-8xl p-1.5"
                   >
                     {link.label}
                   </a>
@@ -280,11 +271,11 @@ export default function Navbar() {
               ref={mobileCtaRef}
               href="#simulator"
               onClick={closeMenu}
-              className="mobile-menu-item inline-flex min-h-14 items-center justify-center border border-inverse bg-inverse px-6 text-xs font-semibold uppercase tracking-[0.16em] text-charcoal"
+              className="mobile-menu-item text-[#111111] inline-flex min-h-14 items-center justify-center border border-inverse bg-charcoal px-6 text-xs font-semibold uppercase tracking-[0.16em]"
             >
               Model ROI
             </a>
-            <div className="mobile-menu-item flex justify-between text-micro font-bold uppercase text-inverse/48">
+            <div className="mobile-menu-item text-inverse flex justify-between text-micro font-bold uppercase text-inverse/48">
               <span>Jakarta / Singapore</span>
               <a href="#contact" onClick={closeMenu}>
                 Contact

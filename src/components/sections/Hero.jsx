@@ -27,34 +27,9 @@ export default function Hero() {
           duration: 1.35,
           stagger: 0.085
         })
-          .to(
-            ".hero-meta",
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.9,
-              stagger: 0.08
-            },
-            "-=0.65"
-          )
-          .to(
-            ".hero-geometry-line",
-            {
-              scaleX: 1,
-              duration: 1.15,
-              stagger: 0.08
-            },
-            "-=0.85"
-          )
-          .to(
-            ".hero-geometry-y",
-            {
-              scaleY: 1,
-              duration: 1.15,
-              stagger: 0.08
-            },
-            "<"
-          );
+          .to(".hero-meta", { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.08 }, "-=0.65")
+          .to(".hero-geometry-line", { scaleX: 1, duration: 1.15, stagger: 0.08 }, "-=0.85")
+          .to(".hero-geometry-y", { scaleY: 1, duration: 1.15, stagger: 0.08 }, "<");
       }, scope);
 
       return () => ctx.revert();
@@ -96,7 +71,7 @@ export default function Hero() {
     <section
       ref={scope}
       id="platform"
-      className="relative min-h-screen overflow-hidden border-b border-line px-5 pt-28 md:px-8 md:pt-32"
+      className="relative min-h-screen overflow-hidden border-b border-line px-5 pt-[76px] md:px-8 md:pt-20"
     >
       <div className="mx-auto grid min-h-[calc(100vh-8rem)] max-w-[1600px] grid-cols-1 border-x border-line lg:grid-cols-[1.25fr_0.75fr]">
         <div className="flex flex-col justify-between border-b border-line p-5 md:p-8 lg:border-b-0 lg:border-r">
@@ -144,7 +119,7 @@ export default function Hero() {
             <span className="hero-geometry-y absolute left-1/3 top-0 h-full w-px bg-line" />
             <span className="hero-geometry-y absolute left-2/3 top-0 h-full w-px bg-line" />
 
-            <div className="absolute left-[12%] top-[16%] h-[26%] w-[38%] border border-charcoal bg-charcoal text-inverse">
+            <div className="absolute left-[12%] top-[16%] h-[28%] w-[38%] min-w-[140px] border border-charcoal bg-charcoal text-inverse">
               <div className="flex h-full flex-col justify-between p-4">
                 <span className="text-micro font-bold uppercase text-inverse/60">Velocity</span>
                 <span className="font-display text-6xl leading-none">4.8x</span>
