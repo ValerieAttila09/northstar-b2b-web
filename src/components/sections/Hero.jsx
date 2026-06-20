@@ -76,7 +76,9 @@ export default function Hero() {
       <div className="mx-auto grid min-h-[calc(100vh-77px)] max-w-[1600px] grid-cols-1 border-x border-line lg:grid-cols-[1.25fr_0.75fr]">
         <div className="flex flex-col justify-between border-b border-line p-5 md:p-8 lg:border-b-0 lg:border-r">
           <div className="grid gap-8">
-            <p className="hero-meta text-micro font-bold uppercase text-muted">B2B operating infrastructure / 2026</p>
+            <p className="hero-meta font-mono text-micro font-bold uppercase text-muted">
+              B2B operating infrastructure / 2026 / 정밀한 시스템
+            </p>
             <h1 className="font-display text-display-lg">
               <span className="line-mask">
                 <span className="reveal-line">Scale</span>
@@ -85,7 +87,9 @@ export default function Hero() {
                 <span className="reveal-line">without</span>
               </span>
               <span className="line-mask">
-                <span className="reveal-line">drag.</span>
+                <span className="reveal-line">
+                  <span className="text-signal">drag.</span>
+                </span>
               </span>
             </h1>
           </div>
@@ -121,18 +125,18 @@ export default function Hero() {
 
             <div className="absolute left-[12%] top-[16%] h-[28%] w-[38%] min-w-[140px] border border-charcoal bg-charcoal text-inverse">
               <div className="flex h-full flex-col justify-between p-4">
-                <span className="text-micro font-bold uppercase text-inverse/60">Velocity</span>
+                <span className="font-mono text-micro font-bold uppercase text-inverse/60">Velocity / 속도</span>
                 <span className="font-display text-6xl leading-none">4.8x</span>
               </div>
             </div>
             <div className="absolute bottom-[14%] right-[10%] h-[34%] w-[42%] border border-charcoal bg-bone">
               <div className="grid h-full grid-cols-5 items-end gap-2 p-4">
                 {[35, 48, 63, 72, 88].map((height) => (
-                  <span key={height} className="block bg-charcoal" style={{ height: `${height}%` }} />
+                  <span key={height} className="block bg-charcoal odd:bg-signal" style={{ height: `${height}%` }} />
                 ))}
               </div>
             </div>
-            <div className="absolute right-[18%] top-[18%] h-24 w-24 rounded-full border border-charcoal" />
+            <div className="absolute right-[18%] top-[18%] h-24 w-24 rounded-full border border-signal" />
           </div>
         </div>
       </div>

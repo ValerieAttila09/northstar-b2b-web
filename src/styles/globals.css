@@ -5,6 +5,7 @@
 :root {
   --background: #F9F9F7;
   --foreground: #111111;
+  --signal: #FFB000;
 }
 
 * {
@@ -27,7 +28,7 @@ body {
     linear-gradient(to bottom, rgba(17, 17, 17, 0.045) 1px, transparent 1px),
     var(--background);
   background-size: calc(100vw / 12) calc(100vw / 12);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-space), var(--font-kr), ui-sans-serif, system-ui, sans-serif;
   text-rendering: geometricPrecision;
 }
 
@@ -38,8 +39,8 @@ html.nav-menu-open body {
 }
 
 ::selection {
-  background: #111111;
-  color: #F9F9F7;
+  background: var(--signal);
+  color: #111111;
 }
 
 a {
@@ -79,4 +80,12 @@ a {
 .marquee-track {
   width: max-content;
   will-change: transform;
+}
+
+.section-transition-panel {
+  will-change: transform;
+}
+
+.section-reveal-target {
+  will-change: transform, clip-path, opacity;
 }

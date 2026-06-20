@@ -14,11 +14,14 @@ module.exports = {
         muted: "#6F6F67",
         line: "#E5E5E0",
         paper: "#FFFFFF",
-        inverse: "#F4F4EF"
+        inverse: "#F4F4EF",
+        signal: "#FFB000",
+        "signal-deep": "#F26A00"
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-cinzel)", "Cinzel Decorative", "Georgia", "serif"]
+        sans: ["var(--font-space)", "Space Grotesk", "var(--font-kr)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-space)", "Space Grotesk", "var(--font-kr)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "IBM Plex Mono", "ui-monospace", "SFMono-Regular", "monospace"]
       },
       fontSize: {
         "display-xl": ["clamp(4.5rem, 13vw, 13.5rem)", { lineHeight: "0.86", letterSpacing: "0" }],

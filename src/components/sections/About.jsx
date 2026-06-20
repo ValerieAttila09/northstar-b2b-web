@@ -9,7 +9,7 @@ import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const collaborators = ["Data Architects", "GTM Operators", "Venture Partners", "RevOps Leads"];
+const collaborators = ["Data Architects / 데이터", "GTM Operators / 실행", "Venture Partners / 투자", "RevOps Leads / 수익"];
 
 export default function About() {
   const scope = useRef(null);
@@ -69,7 +69,7 @@ export default function About() {
             </div>
             <div className="flex h-auto flex-col justify-between p-5 md:p-8 bg-charcoal">
               <div className="flex justify-between text-micro font-bold uppercase text-inverse/54 mb-4">
-                <span>Founder profile</span>
+                <span>Founder profile / 창업자</span>
                 <span>01</span>
               </div>
               <div>
@@ -83,9 +83,9 @@ export default function About() {
         </div>
 
         <div className="py-[12rem] px-5 md:px-8">
-          <p className="mb-8 text-micro font-bold uppercase text-muted">About the company</p>
+          <p className="mb-8 font-mono text-micro font-bold uppercase text-muted">About the company / 회사의 구조</p>
           <h2 className="max-w-5xl font-display text-display-md">
-            Built by operators who prefer systems over spectacle.
+            Built by operators who prefer <span className="text-signal">systems</span> over spectacle.
           </h2>
           <div className="mt-12 grid gap-8 text-body-xl text-charcoal/72 md:grid-cols-2">
             <p>
@@ -106,7 +106,7 @@ export default function About() {
               ["14", "Markets supported"]
             ].map(([value, label]) => (
               <div key={label} className="about-stat border-b border-line p-5 md:border-b-0 md:border-r md:p-6 last:md:border-r-0">
-                <p className="font-display text-6xl leading-none">{value}</p>
+                <p className="font-display text-6xl leading-none text-charcoal">{value}</p>
                 <p className="mt-8 text-micro font-bold uppercase text-muted">{label}</p>
               </div>
             ))}

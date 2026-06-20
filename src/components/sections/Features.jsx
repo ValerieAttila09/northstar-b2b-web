@@ -10,17 +10,17 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const features = [
   {
-    kicker: "01 / Data",
+    kicker: "01 / Data / 데이터",
     title: "Clean decision layers",
     body: "Normalize product, CRM, billing, and success data into one operating model with executive-grade visibility."
   },
   {
-    kicker: "02 / Workflow",
+    kicker: "02 / Workflow / 흐름",
     title: "Revenue motion design",
     body: "Map the handoffs, rules, and automations that remove drag between sales, onboarding, and expansion."
   },
   {
-    kicker: "03 / Control",
+    kicker: "03 / Control / 통제",
     title: "Scale governance",
     body: "Build lightweight rituals and metrics so teams can move faster without burying leadership in noise."
   }
@@ -95,9 +95,9 @@ export default function Features() {
     <section ref={scope} id="method" className="relative overflow-hidden border-b border-line px-5 pb-24 md:px-8 md:pb-38">
       <div className="mx-auto max-w-[1600px] border-x border-line pt-24">
         <div className="grid gap-8 p-5 md:grid-cols-[0.8fr_1.2fr] md:p-8">
-          <p className="text-micro font-bold uppercase text-muted">Features / operating clarity</p>
+          <p className="font-mono text-micro font-bold uppercase text-muted">Features / operating clarity / 구조</p>
           <h2 className="max-w-5xl font-display text-display-md">
-            A strict system for teams outgrowing improvisation.
+            A strict system for teams outgrowing <span className="text-signal">improvisation.</span>
           </h2>
         </div>
 
@@ -118,7 +118,7 @@ export default function Features() {
                 className="feature-card group min-h-[480px] border-b border-line p-5 transition-colors duration-500 ease-editorial hover:bg-charcoal hover:text-inverse md:border-b-0 md:p-8"
               >
                 <div className="flex h-full flex-col justify-between gap-16">
-                  <p className="text-micro font-bold uppercase text-muted transition-colors duration-500 group-hover:text-inverse/58">
+                  <p className="font-mono text-micro font-bold uppercase text-muted transition-colors duration-500 group-hover:text-signal">
                     {feature.kicker}
                   </p>
                   <div>

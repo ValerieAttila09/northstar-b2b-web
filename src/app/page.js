@@ -1,6 +1,7 @@
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import Entrance from "../components/common/Entrance";
+import SectionTransitions from "../components/common/SectionTransitions";
 import Hero from "../components/sections/Hero";
 import Marquee from "../components/sections/Marquee";
 import About from "../components/sections/About";
@@ -15,6 +16,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-bone text-charcoal">
       <Entrance />
       <Navbar />
+      <SectionTransitions />
       <Hero />
       <Marquee />
       <About />
