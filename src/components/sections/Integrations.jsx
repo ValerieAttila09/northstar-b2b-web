@@ -240,23 +240,23 @@ export default function Integrations() {
     <section
       id="integrations"
       ref={sectionRef}
-      className="relative bg-white text-black overflow-hidden"
+      className="relative bg-bone text-charcoal overflow-hidden"
     >
       {/* Header - Light theme */}
-      <div className="integrations-header relative px-5 md:px-8 border-b border-black/10">
+      <div className="integrations-header relative px-5 md:px-8 border-b border-charcoal/10">
         <div className="mx-auto max-w-[1600px] border-x border-line py-8 sm:pt-12 md:pt-24 pb-6 sm:pb-8 md:pb-10">
           <div className="border-t border-line grid gap-8 p-5 md:grid-cols-[0.8fr_1.2fr] md:p-8">
-            <p className="font-mono text-xs font-bold uppercase text-amber-500 tracking-widest mb-6">
+            <p className="font-mono text-xs font-bold uppercase text-signal-deep tracking-widest mb-6">
               Integrations / 통합
             </p>
             <div className="">
               <h2 className="text-display-md font-bold leading-[0.95] tracking-tight max-w-4xl">
                 Your stack.
                 <br />
-                <span className="text-black/30">One operating layer.</span>
+                <span className="text-signal">One operating layer.</span>
               </h2>
 
-              <p className="mt-6 text-lg text-black/60 max-w-2xl leading-relaxed">
+              <p className="mt-6 text-lg text-charcoal/60 max-w-2xl leading-relaxed">
                 Northstar connects to the tools your team already uses. No rip-and-replace.
                 Just a clean operating view built on top of your existing infrastructure.
               </p>
@@ -269,9 +269,9 @@ export default function Integrations() {
                   { value: '99.9%', label: 'Uptime SLA' },
                   { value: '2.4M', label: 'Records synced daily' },
                 ].map((stat, idx) => (
-                  <div key={idx} className="stat-item border-l-2 border-amber-400 pl-4">
+                  <div key={idx} className="stat-item border-l-2 border-signal pl-4">
                     <div className="text-3xl md:text-4xl font-bold">{stat.value}</div>
-                    <div className="text-xs text-black/50 font-mono uppercase tracking-wider mt-1">
+                    <div className="text-xs text-charcoal/50 font-mono uppercase tracking-wider mt-1">
                       {stat.label}
                     </div>
                   </div>
@@ -287,22 +287,22 @@ export default function Integrations() {
       <div ref={horizontalRef} className="relative">
 
         {/* Sticky progress bar */}
-        <div ref={stickyInfoRef} className="sticky top-[64px] z-30 bg-white/90 backdrop-blur border-b border-black/10 px-5 md:px-8 py-4">
+        <div ref={stickyInfoRef} className="sticky top-[64px] z-30 bg-white/90 backdrop-blur border-b border-charcoal/10 px-5 md:px-8 py-4">
           <div className="mx-auto max-w-[1600px] flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-signal rounded-full animate-pulse" />
               <span className="font-mono text-xs font-bold uppercase tracking-wider">
                 Scroll to explore
               </span>
             </div>
-            <div className="flex-1 h-px bg-black/10 relative overflow-hidden">
+            <div className="flex-1 h-px bg-charcoal/10 relative overflow-hidden">
               <div
                 ref={progressRef}
-                className="absolute top-0 left-0 h-full bg-black origin-left"
+                className="absolute top-0 left-0 h-full bg-charcoal origin-left"
                 style={{ transform: 'scaleX(0)' }}
               />
             </div>
-            <span ref={counterRef} className="font-mono text-xs text-black/50 min-w-[60px] text-right">
+            <span ref={counterRef} className="font-mono text-xs text-charcoal/50 min-w-[60px] text-right">
               01 / 08
             </span>
           </div>
@@ -311,7 +311,7 @@ export default function Integrations() {
         {/* Timeline indicator - sticky until 50% */}
         <div
           ref={stickyInfoRef}
-          className="sticky top-[64px] z-0 bg-amber-400 text-black px-5 md:px-8 py-3 border-b border-black/10"
+          className="sticky top-[64px] z-0 bg-signal text-charcoal px-5 md:px-8 py-3 border-b border-charcoal/10"
         >
           <div className="mx-auto max-w-[1600px] flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -323,7 +323,7 @@ export default function Integrations() {
             <div className="hidden md:flex items-center gap-8">
               {timelineMilestones.map((m, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  <div className="timeline-dot w-1.5 h-1.5 bg-black rounded-full" />
+                  <div className="timeline-dot w-1.5 h-1.5 bg-charcoal rounded-full" />
                   <span className="font-mono text-[10px] uppercase tracking-wider">
                     {m.label}
                   </span>
@@ -365,10 +365,10 @@ export default function Integrations() {
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="font-mono text-xs font-bold uppercase tracking-widest text-black/40">
+                        <span className="font-mono text-xs font-bold uppercase tracking-widest text-charcoal/40">
                           {String(idx + 1).padStart(2, '0')}
                         </span>
-                        <span className="px-2 py-0.5 bg-black text-white text-[10px] font-bold uppercase tracking-wider rounded">
+                        <span className="px-2 py-0.5 bg-charcoal text-white text-[10px] font-bold uppercase tracking-wider rounded">
                           {integration.status}
                         </span>
                       </div>
@@ -382,13 +382,13 @@ export default function Integrations() {
                     <span className="text-sm font-bold uppercase tracking-wider">
                       {integration.category}
                     </span>
-                    <span className="w-1 h-1 bg-black rounded-full" />
-                    <span className="text-sm text-black/50 font-mono">
+                    <span className="w-1 h-1 bg-charcoal rounded-full" />
+                    <span className="text-sm text-charcoal/50 font-mono">
                       {integration.categoryKr}
                     </span>
                   </div>
 
-                  <p className="text-xl md:text-2xl leading-relaxed text-black/70 max-w-lg">
+                  <p className="text-xl md:text-2xl leading-relaxed text-charcoal/70 max-w-lg">
                     {integration.description}
                   </p>
 
@@ -397,9 +397,9 @@ export default function Integrations() {
                     {integration.metrics.map((metric, mIdx) => (
                       <div
                         key={mIdx}
-                        className="border-l-2 border-amber-400 pl-3"
+                        className="border-l-2 border-signal pl-3"
                       >
-                        <div className="text-[10px] font-mono uppercase tracking-wider text-black/50 mb-1">
+                        <div className="text-[10px] font-mono uppercase tracking-wider text-charcoal/50 mb-1">
                           {mIdx === 0 ? 'Volume' : mIdx === 1 ? 'Frequency' : 'Quality'}
                         </div>
                         <div className="text-sm font-bold">{metric}</div>
@@ -425,19 +425,19 @@ export default function Integrations() {
                     <div className="relative h-full flex flex-col justify-between">
                       {/* Top: Northstar node */}
                       <div className="flex justify-center">
-                        <div className="bg-black text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 shadow-xl">
-                          <div className="w-3 h-3 bg-amber-400 rounded-full animate-pulse" />
+                        <div className="bg-charcoal text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 shadow-xl">
+                          <div className="w-3 h-3 bg-signal rounded-full animate-pulse" />
                           Northstar
                         </div>
                       </div>
 
                       {/* Connection lines */}
-                      <div className="absolute top-20 left-1/2 w-px h-32 bg-gradient-to-b from-black to-amber-400" />
-                      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-48 h-px bg-black/20" />
+                      <div className="absolute top-20 left-1/2 w-px h-32 bg-gradient-to-b from-charcoal to-signal" />
+                      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-48 h-px bg-charcoal/20" />
 
                       {/* Middle: Integration node */}
                       <div className="flex justify-center items-center relative">
-                        <div className="absolute w-32 h-32 border-2 border-amber-400 rounded-full animate-ping opacity-20" />
+                        <div className="absolute w-32 h-32 border-2 border-signal rounded-full animate-ping opacity-20" />
                         <div
                           className={`w-24 h-24 ${integration.color} rounded-2xl flex items-center justify-center text-white shadow-2xl relative z-10`}
                         >
@@ -459,9 +459,9 @@ export default function Integrations() {
                         {['Data', 'Events', 'Signals'].map((label, lIdx) => (
                           <div
                             key={lIdx}
-                            className="bg-white border border-black/10 rounded-lg p-3 text-center"
+                            className="bg-white border border-charcoal/10 rounded-lg p-3 text-center"
                           >
-                            <div className="text-[10px] font-mono uppercase tracking-wider text-black/50 mb-1">
+                            <div className="text-[10px] font-mono uppercase tracking-wider text-charcoal/50 mb-1">
                               {label}
                             </div>
                             <div className="flex items-center justify-center gap-1">
@@ -474,14 +474,14 @@ export default function Integrations() {
                     </div>
 
                     {/* Corner accents */}
-                    <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-amber-400" />
-                    <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-amber-400" />
-                    <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-amber-400" />
-                    <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-amber-400" />
+                    <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-signal" />
+                    <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-signal" />
+                    <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-signal" />
+                    <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-signal" />
                   </div>
 
                   {/* Floating badge */}
-                  <div className="absolute -top-4 -right-4 bg-amber-400 text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg rotate-12">
+                  <div className="absolute -top-4 -right-4 bg-signal text-charcoal px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg rotate-12">
                     API v2.4
                   </div>
                 </div>
@@ -492,21 +492,21 @@ export default function Integrations() {
       </div>
 
       {/* Bottom CTA - Light theme */}
-      <div className="bg-white border-y border-black/10 px-5 md:px-8 pb-8">
-        <div className="px-5 md:px-8 py-5 md:py-8 mx-auto max-w-[1600px] grid md:grid-cols-[1.2fr_0.8fr] gap-12 items-center border-x border-line">
+      <div className="bg-white border-y border-charcoal/10 px-5 md:px-8 pb-8">
+        <div className="px-5 md:px-8 py-6 sm:py-8 md:py-12 mx-auto max-w-[1600px] grid md:grid-cols-[1.2fr_0.8fr] gap-12 items-center border-x border-line">
           <div className=''>
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
               Don&apos;t see your stack?
               <br />
-              <span className="text-black/30">We&apos;ll build the connector.</span>
+              <span className="text-signal">We&apos;ll build the connector.</span>
             </h3>
-            <p className="mt-6 text-lg text-black/60 max-w-xl leading-relaxed">
+            <p className="mt-6 text-lg text-charcoal/60 max-w-xl leading-relaxed">
               Enterprise tier includes custom integration development. We&apos;ve built
               connectors for 40+ tools and counting.
             </p>
           </div>
           <div className="flex flex-col gap-4 md:items-end">
-            <button className="group inline-flex items-center gap-3 bg-black text-white px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-amber-400 hover:text-black transition-all duration-300">
+            <button className="group inline-flex items-center gap-3 bg-charcoal text-white px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-signal hover:text-charcoal transition-all duration-300">
               <span>Request Integration</span>
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
@@ -518,7 +518,7 @@ export default function Integrations() {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
-            <span className="text-xs text-black/40 font-mono">
+            <span className="text-xs text-charcoal/40 font-mono">
               Average build time: 2 weeks
             </span>
           </div>
@@ -526,7 +526,7 @@ export default function Integrations() {
 
         {/* Logo cloud */}
         <div className="mx-auto max-w-[1600px] py-12 border-b border-x border-line">
-          <p className="text-center font-mono text-xs font-bold uppercase tracking-widest text-black/40 mb-8">
+          <p className="text-center font-mono text-xs font-bold uppercase tracking-widest text-charcoal/40 mb-8">
             Trusted by teams using these tools
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60">
@@ -534,7 +534,7 @@ export default function Integrations() {
               (name) => (
                 <span
                   key={name}
-                  className="text-lg md:text-xl font-bold text-black/40 hover:text-black transition-colors cursor-default"
+                  className="text-lg md:text-xl font-bold text-charcoal/40 hover:text-charcoal transition-colors cursor-default"
                 >
                   {name}
                 </span>

@@ -14,6 +14,7 @@ const plans = [
     labelKr: '기초',
     tagline: 'For teams finding product-market fit.',
     price: '$2,400',
+    priceNumeric: 2400,
     period: 'Per month',
     note: 'Billed annually. Monthly option at $2,900.',
     cta: 'Start Foundation',
@@ -34,6 +35,7 @@ const plans = [
     labelKr: '성장',
     tagline: 'For scaling teams that need systems.',
     price: '$6,800',
+    priceNumeric: 6800,
     period: 'Per month',
     note: 'Most popular for Series A–B companies.',
     cta: 'Start Growth',
@@ -56,6 +58,7 @@ const plans = [
     labelKr: '확장',
     tagline: 'For teams crossing the $10M ARR mark.',
     price: '$14,500',
+    priceNumeric: 14500,
     period: 'Per month',
     note: 'Built for multi-team coordination.',
     cta: 'Start Scale',
@@ -78,6 +81,7 @@ const plans = [
     labelKr: '엔터프라이즈',
     tagline: 'For market leaders with complex operations.',
     price: 'Custom',
+    priceNumeric: null,
     period: 'Tailored engagement',
     note: 'Board-level partnerships only.',
     cta: 'Contact Sales',
@@ -180,21 +184,50 @@ export default function Pricing() {
           }
         );
 
-        // Price numbers count-up effect
-        gsap.fromTo(
-          '.price-value',
-          { textContent: 0 },
-          {
-            textContent: 1,
-            duration: 1.2,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: '.pricing-grid',
-              start: 'top 70%',
-              toggleActions: 'play none none none',
-            },
+        // Price numbers count-up effect - FIXED
+        const priceElements = gsap.utils.toArray('.price-value');
+        priceElements.forEach((el, idx) => {
+          const targetValue = plans[idx].priceNumeric;
+          
+          if (targetValue === null) {
+            // Handle "Custom" - just fade in
+            gsap.fromTo(
+              el,
+              { opacity: 0, y: 20 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.8 + idx * 0.1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: '.pricing-grid',
+                  start: 'top 70%',
+                  toggleActions: 'play none none none',
+                },
+              }
+            );
+          } else {
+            // Animate numeric prices
+            const counter = { value: 0 };
+            
+            gsap.to(counter, {
+              value: targetValue,
+              duration: 1.5,
+              ease: 'power2.out',
+              delay: 0.8 + idx * 0.15,
+              onUpdate: () => {
+                const formatted = '$' + Math.round(counter.value).toLocaleString('en-US');
+                el.textContent = formatted;
+              },
+              scrollTrigger: {
+                trigger: '.pricing-grid',
+                start: 'top 70%',
+                toggleActions: 'play none none none',
+              },
+            });
           }
-        );
+        });
 
         // Feature list items stagger
         gsap.fromTo(
@@ -301,10 +334,6 @@ export default function Pricing() {
           }}
         />
       </div>
-
-      {/* Gradient orbs */}
-      {/* <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-400/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-amber-400/5 rounded-full blur-3xl pointer-events-none" /> */}
 
       <div className="relative mx-auto max-w-[1600px]">
         {/* Header */}
