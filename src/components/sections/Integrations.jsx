@@ -207,7 +207,7 @@ export default function Integrations() {
       <div className="relative py-20 md:py-28 px-5 md:px-8">
         {/* Gradient blob */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none">
-          <div className="absolute inset-0 bg-linear-to-br from-amber-200/40 via-sky-200/30 to-rose-200/30 rounded-none blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-200/40 via-sky-200/30 to-rose-200/30 rounded-none blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-[1600px]">
