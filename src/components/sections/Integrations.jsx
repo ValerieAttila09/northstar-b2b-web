@@ -4,85 +4,10 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { INTEGRATIONS_CONTENT } from '../../lib/constants/en';
+import Image from 'next/image';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const topIntegrations = [
-  { name: 'Salesforce', color: 'bg-blue-500', letter: 'S' },
-  { name: 'Stripe', color: 'bg-violet-500', letter: 'S' },
-  { name: 'HubSpot', color: 'bg-orange-500', letter: 'H' },
-  { name: 'Slack', color: 'bg-emerald-500', letter: 'S' },
-  { name: 'Segment', color: 'bg-sky-500', letter: 'S' },
-  { name: 'Notion', color: 'bg-neutral-800', letter: 'N' },
-  { name: 'Linear', color: 'bg-indigo-500', letter: 'L' },
-  { name: 'Shopify', color: 'bg-green-600', letter: 'S' },
-  { name: 'Zapier', color: 'bg-orange-400', letter: 'Z' },
-  { name: 'Figma', color: 'bg-pink-500', letter: 'F' },
-];
-
-const bottomIntegrations = [
-  { name: 'Intercom', color: 'bg-blue-600', letter: 'I' },
-  { name: 'Pipedrive', color: 'bg-green-500', letter: 'P' },
-  { name: 'Airtable', color: 'bg-blue-400', letter: 'A' },
-  { name: 'Mixpanel', color: 'bg-purple-500', letter: 'M' },
-  { name: 'Amplitude', color: 'bg-indigo-600', letter: 'A' },
-  { name: 'Looker', color: 'bg-amber-500', letter: 'L' },
-  { name: 'Tableau', color: 'bg-blue-700', letter: 'T' },
-  { name: 'Snowflake', color: 'bg-sky-400', letter: 'S' },
-  { name: 'Databricks', color: 'bg-red-500', letter: 'D' },
-  { name: 'Twilio', color: 'bg-red-600', letter: 'T' },
-];
-
-const featuredIntegrations = [
-  {
-    name: 'Salesforce',
-    category: 'CRM',
-    categoryKr: '고객관리',
-    description: 'Sync deals, contacts, and pipeline stages in real-time.',
-    color: 'bg-blue-500',
-    letter: 'S',
-  },
-  {
-    name: 'Stripe',
-    category: 'Billing',
-    categoryKr: '결제',
-    description: 'Pull MRR, churn, and expansion revenue automatically.',
-    color: 'bg-violet-500',
-    letter: 'S',
-  },
-  {
-    name: 'HubSpot',
-    category: 'Marketing',
-    categoryKr: '마케팅',
-    description: 'Connect attribution data to revenue outcomes.',
-    color: 'bg-orange-500',
-    letter: 'H',
-  },
-  {
-    name: 'Slack',
-    category: 'Communication',
-    categoryKr: '커뮤니케이션',
-    description: 'Get daily operating signals in your team channel.',
-    color: 'bg-emerald-500',
-    letter: 'S',
-  },
-  {
-    name: 'Segment',
-    category: 'Data',
-    categoryKr: '데이터',
-    description: 'Ingest product usage events and map to accounts.',
-    color: 'bg-sky-500',
-    letter: 'S',
-  },
-  {
-    name: 'Notion',
-    category: 'Workspace',
-    categoryKr: '워크스페이스',
-    description: 'Embed live operating dashboards in your docs.',
-    color: 'bg-neutral-800',
-    letter: 'N',
-  },
-];
 
 export default function Integrations() {
   const sectionRef = useRef(null);
@@ -108,23 +33,30 @@ export default function Integrations() {
           }
         );
 
-        // Top marquee
-        gsap.to('.marquee-top', {
-          xPercent: -50,
-          duration: 40,
-          repeat: -1,
-          ease: 'linear',
-        });
+        // Marquee animation tuned for a seamless infinite loop
+        const getMarqueeDistance = (track) => {
+          if (!track?.children?.length) return 0;
+          const firstGroup = track.children[0];
+          const gapValue = parseFloat(
+            getComputedStyle(track).columnGap || getComputedStyle(track).gap || '0'
+          );
+          return firstGroup?.offsetWidth ? firstGroup.offsetWidth + gapValue : 0;
+        };
 
-        // Bottom marquee (reverse direction)
-        gsap.fromTo('.marquee-bottom', {
-          xPercent: -50,
-        }, {
-          xPercent: 0,
-          duration: 40,
-          repeat: -1,
-          ease: 'linear',
-        });
+        const createMarqueeTimeline = (selector) => {
+          const track = sectionRef.current?.querySelector(selector);
+          if (!track) return null;
+
+          const distance = getMarqueeDistance(track);
+          if (!distance) return null;
+
+          const timeline = gsap.timeline({ repeat: -1, repeatRefresh: true });
+          timeline.to(track, { x: -distance, duration: 22, ease: 'none' }).set(track, { x: 0 });
+          return timeline;
+        };
+
+        createMarqueeTimeline('.marquee-top-track');
+        createMarqueeTimeline('.marquee-bottom-track');
 
         // Featured cards stagger
         gsap.fromTo(
@@ -240,25 +172,33 @@ export default function Integrations() {
       </div>
 
       {/* Top Marquee */}
-      <div className="relative py-8 border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-l from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-l from-bone to-transparent"/>
-        <div className="overflow-hidden">
-          <div className="marquee-top flex gap-6 w-max">
-            {[...topIntegrations, ...topIntegrations].map((item, idx) => (
-              <div
-                key={idx}
-                className="logo-item flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
-              >
+      <div className="relative border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-r from-bone to-transparent"/>
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-r from-bone to-transparent"/>
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-l from-bone to-transparent"/>
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-l from-bone to-transparent"/>
+        <div className="overflow-hidden py-8">
+          <div className="marquee-top-track flex gap-10 md:gap-12 w-max will-change-transform">
+            <div className="flex shrink-0 gap-10 md:gap-12">
+              {INTEGRATIONS_CONTENT.top_integrations.map((item, idx) => (
                 <div
-                  className={`w-12 h-12 ${item.color} rounded-none flex items-center justify-center text-white font-bold text-xl shadow-md`}
+                  key={`top-${idx}`}
+                  className="logo-item flex-shrink-0 w-20 h-20 p-2 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
                 >
-                  {item.letter}
+                  <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
+              {INTEGRATIONS_CONTENT.top_integrations.map((item, idx) => (
+                <div
+                  key={`top-dup-${idx}`}
+                  className="logo-item flex-shrink-0 w-20 h-20 p-2 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
+                >
+                  <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -290,7 +230,7 @@ export default function Integrations() {
 
           {/* Featured integrations grid */}
           <div className="featured-grid grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-            {featuredIntegrations.map((integration, idx) => (
+            {INTEGRATIONS_CONTENT.featured_integrations.map((integration, idx) => (
               <div
                 key={idx}
                 className="featured-card group bg-white border border-charcoal/10 rounded-none p-6 md:p-8 hover:border-signal hover:shadow-xl transition-all duration-300 cursor-pointer"
@@ -338,25 +278,33 @@ export default function Integrations() {
       </div>
 
       {/* Bottom Marquee */}
-      <div className="relative py-8 border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-l from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-gradient-to-l from-bone to-transparent"/>
-        <div className="overflow-hidden">
-          <div className="marquee-bottom flex gap-6 w-max">
-            {[...bottomIntegrations, ...bottomIntegrations].map((item, idx) => (
-              <div
-                key={idx}
-                className="logo-item flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
-              >
+      <div className="relative border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent"/>
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent"/>
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent"/>
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent"/>
+        <div className="overflow-hidden py-8">
+          <div className="marquee-bottom-track flex gap-10 md:gap-12 w-max will-change-transform">
+            <div className="flex shrink-0 gap-10 md:gap-12">
+              {INTEGRATIONS_CONTENT.bottom_integrations.map((item, idx) => (
                 <div
-                  className={`w-12 h-12 ${item.color} rounded-none flex items-center justify-center text-white font-bold text-xl shadow-md`}
+                  key={`bottom-${idx}`}
+                  className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
                 >
-                  {item.letter}
+                  <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
+              {INTEGRATIONS_CONTENT.bottom_integrations.map((item, idx) => (
+                <div
+                  key={`bottom-dup-${idx}`}
+                  className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
+                >
+                  <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

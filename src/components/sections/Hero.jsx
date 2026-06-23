@@ -17,15 +17,13 @@ export default function Hero() {
       const ctx = gsap.context(() => {
         gsap.set(".reveal-line", { yPercent: 110, rotate: 1.5 });
         gsap.set(".hero-meta", { autoAlpha: 0, y: 24 });
-        gsap.set(".hero-geometry-line", { scaleX: 0, transformOrigin: "left center" });
-        gsap.set(".hero-geometry-y", { scaleY: 0, transformOrigin: "top center" });
-
+        gsap.set(".right-content", { autoAlpha: 0 });
+        
         const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
-        tl.to(".reveal-line", { yPercent: 0, rotate: 0, duration: 1.35, stagger: 0.085, delay: 4 })
+        tl.to(".reveal-line", { yPercent: 0, rotate: 0, duration: 1.35, stagger: 0.085, delay: 5.4 })
           .to(".hero-meta", { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.08 }, "-=0.65")
-          .to(".hero-geometry-line", { scaleX: 1, duration: 1.15, stagger: 0.08 }, "-=0.85")
-          .to(".hero-geometry-y", { scaleY: 1, duration: 1.15, stagger: 0.08 }, "<");
+          .to(".right-content", { autoAlpha: 1, duration: 0.9 }, "-=0.8");
       }, scope);
 
       return () => ctx.revert();
@@ -67,10 +65,10 @@ export default function Hero() {
     <section
       ref={scope}
       id="platform"
-      className="relative min-h-screen overflow-hidden border-b border-line px-5 pt-[64px] md:px-8 md:pt-16"
+      className="relative min-h-screen overflow-hidden border-b border-line px-5 pt-[58px] md:px-8 md:pt-16"
     >
       <div className="mx-auto grid min-h-[calc(100vh-100px)] max-w-[1600px] grid-cols-1 border-x border-line lg:grid-cols-[1.25fr_0.75fr]">
-        <div className="flex flex-col justify-around border-b border-line p-5 md:p-8 lg:border-b-0 lg:border-r">
+        <div className="flex flex-col justify-around gap-6 md:gap-0 border-b border-line p-5 md:p-8 lg:border-b-0 lg:border-r">
           <div className="grid gap-8">
             <p className="hero-meta font-mono text-micro font-bold uppercase text-muted">
               B2B operating infrastructure / 2026 / 정밀한 시스템
@@ -103,8 +101,9 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        <NorthStarPhoneMockup />
+        <div className="right-content">
+          <NorthStarPhoneMockup />
+        </div>
       </div>
     </section>
   );

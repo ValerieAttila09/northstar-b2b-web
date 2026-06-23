@@ -130,7 +130,7 @@ export default function Steps() {
                   });
                 } else {
                   gsap.to(indicator, {
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: '#181818',
                     color: 'rgba(255,255,255,0.4)',
                     duration: 0.3,
                   });
@@ -161,7 +161,7 @@ export default function Steps() {
     <section
       id="steps"
       ref={sectionRef}
-      className="relative bg-neutral-950 text-white overflow-hidden"
+      className="relative bg-charcoal border-t border-muted text-inverse overflow-hidden"
     >
       {/* Background grid */}
       <div
@@ -175,20 +175,38 @@ export default function Steps() {
 
       {/* Step Indicators - Fixed positioning */}
       <div
-        className={`fixed top-0 left-0 right-0 z-[100] bg-neutral-950/95 backdrop-blur-xl border-b border-white/10 px-5 md:px-8 py-6 transition-all duration-300 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-[100] bg-charcoal/95 backdrop-blur-xl border-b border-white/10 px-5 md:px-8 py-6 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
+          }`}
       >
-        <div className="mx-auto max-w-[1600px]">
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-xs font-bold uppercase text-amber-400 tracking-widest">
+        <div className="mx-auto max-w-[1600px] space-y-5">
+          <div className="flex items-center justify-between gap-4 sm:gap-6 md:gap-8">
+            <span className="text-nowrap font-mono text-xs font-bold uppercase text-amber-400 tracking-widest">
               How it works / 작동 방식
             </span>
-            <span className="font-mono text-xs text-white/40">
+            <div className="w-full relative">
+              <div className="h-px bg-ink w-full" />
+              <div
+                ref={progressLineRef}
+                className="absolute top-0 left-0 h-px bg-amber-400 origin-left"
+                style={{ transform: 'scaleX(0)' }}
+              />
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between">
+                {steps.map((step, idx) => (
+                  <div
+                    key={idx}
+                    ref={(el) => (stepIndicatorsRef.current[idx] = el)}
+                    className="w-8 h-8  bg-ink text-inverse/40 flex items-center justify-center text-xs font-bold font-mono transition-all duration-300"
+                  >
+                    {step.num}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <span className="text-nowrap font-mono text-xs text-inverse/40">
               {steps.length} steps
             </span>
           </div>
-          <div className="relative">
+          {/* <div className="relative">
             <div className="h-px bg-white/10 w-full" />
             <div
               ref={progressLineRef}
@@ -200,13 +218,13 @@ export default function Steps() {
                 <div
                   key={idx}
                   ref={(el) => (stepIndicatorsRef.current[idx] = el)}
-                  className="w-8 h-8 rounded-full bg-white/10 text-white/40 flex items-center justify-center text-xs font-bold font-mono transition-all duration-300"
+                  className="w-8 h-8  bg-white/10 text-inverse/40 flex items-center justify-center text-xs font-bold font-mono transition-all duration-300"
                 >
                   {step.num}
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -231,7 +249,7 @@ export default function Steps() {
                     STEP {step.num}
                   </span>
                   <span className="w-8 h-px bg-amber-400" />
-                  <span className="font-mono text-xs text-white/40">
+                  <span className="font-mono text-xs text-inverse/40">
                     {step.titleKr}
                   </span>
                 </div>
@@ -242,7 +260,7 @@ export default function Steps() {
                 <p className="text-lg text-amber-400 font-medium mb-6">
                   {step.subtitle}
                 </p>
-                <p className="text-base text-white/60 leading-relaxed mb-8 max-w-lg">
+                <p className="text-base text-inverse/60 leading-relaxed mb-8 max-w-lg">
                   {step.description}
                 </p>
 
@@ -250,9 +268,9 @@ export default function Steps() {
                   {step.features.map((feature, fIdx) => (
                     <li
                       key={fIdx}
-                      className="flex items-start gap-3 text-sm text-white/70"
+                      className="flex items-start gap-3 text-sm text-inverse/70"
                     >
-                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-amber-400/20 flex items-center justify-center mt-0.5">
+                      <span className="flex-shrink-0 w-5 h-5  bg-amber-400/20 flex items-center justify-center mt-0.5">
                         <svg
                           width="12"
                           height="12"
@@ -271,14 +289,14 @@ export default function Steps() {
               </div>
 
               {/* Right: Visual */}
-              <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 p-8 md:p-12 lg:p-16 flex items-center border-l border-white/10">
+              <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 p-8 md:p-12 lg:p-16 flex items-center border border-bone/10">
                 <div className="w-full">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-                    <span className="font-mono text-xs font-bold uppercase text-white/60 tracking-wider">
+                    <span className="font-mono text-xs font-bold uppercase text-inverse/60 tracking-wider">
                       {step.visual.label}
                     </span>
-                    <span className="text-xs text-white/40">
+                    <span className="text-xs text-inverse/40">
                       / {step.visual.labelKr}
                     </span>
                   </div>
@@ -288,11 +306,11 @@ export default function Steps() {
                       {step.visual.items.map((item, iIdx) => (
                         <div
                           key={iIdx}
-                          className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between hover:border-amber-400/50 transition-colors"
+                          className="bg-white/5 border border-white/10  p-4 flex items-center justify-between hover:border-amber-400/50 transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center text-white font-bold text-sm`}
+                              className={`w-10 h-10 ${item.color}  flex items-center justify-center text-inverse font-bold text-sm`}
                             >
                               {item.name[0]}
                             </div>
@@ -313,10 +331,10 @@ export default function Steps() {
                       {step.visual.metrics.map((metric, mIdx) => (
                         <div
                           key={mIdx}
-                          className="bg-white/5 border border-white/10 rounded-xl p-5"
+                          className="bg-white/5 border border-white/10  p-5"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-mono uppercase text-white/40 tracking-wider">
+                            <span className="text-xs font-mono uppercase text-inverse/40 tracking-wider">
                               {metric.label}
                             </span>
                             <span className="text-xs font-bold text-emerald-400">
@@ -336,30 +354,26 @@ export default function Steps() {
                       {step.visual.stages.map((stage, sIdx) => (
                         <div
                           key={sIdx}
-                          className={`border rounded-xl p-4 flex items-center justify-between transition-all ${
-                            stage.active
-                              ? 'border-amber-400 bg-amber-400/10'
-                              : 'border-white/10 bg-white/5'
-                          }`}
+                          className={`border  p-4 flex items-center justify-between transition-all ${stage.active
+                            ? 'border-amber-400 bg-amber-400/10'
+                            : 'border-white/10 bg-white/5'
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-3 h-3 rounded-full ${
-                                stage.active ? 'bg-amber-400' : 'bg-white/20'
-                              }`}
+                              className={`w-3 h-3  ${stage.active ? 'bg-amber-400' : 'bg-white/20'
+                                }`}
                             />
                             <span
-                              className={`text-sm font-medium ${
-                                stage.active ? 'text-amber-400' : 'text-white/60'
-                              }`}
+                              className={`text-sm font-medium ${stage.active ? 'text-amber-400' : 'text-inverse/60'
+                                }`}
                             >
                               {stage.name}
                             </span>
                           </div>
                           <span
-                            className={`text-sm font-bold ${
-                              stage.active ? 'text-amber-400' : 'text-white/40'
-                            }`}
+                            className={`text-sm font-bold ${stage.active ? 'text-amber-400' : 'text-inverse/40'
+                              }`}
                           >
                             {stage.arr}
                           </span>
@@ -376,8 +390,8 @@ export default function Steps() {
 
       {/* Scroll Indicator */}
       {/* <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
-        <div ref={scrollIndicatorRef} className="bg-white/10 backdrop-blur border border-white/20 rounded-full px-6 py-3 flex items-center gap-3">
-          <span className="font-mono text-xs text-white/60 uppercase tracking-wider">
+        <div ref={scrollIndicatorRef} className="bg-white/10 backdrop-blur border border-white/20  px-6 py-3 flex items-center gap-3">
+          <span className="font-mono text-xs text-inverse/60 uppercase tracking-wider">
             Scroll to explore
           </span>
           <svg

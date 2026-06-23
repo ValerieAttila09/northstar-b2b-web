@@ -1,3 +1,25 @@
+import salesforce_logo from '../../assets/icons/Salesforce/Salesforce_idN3OdcTG__1.png';
+import airtable_logo from '../../assets/icons/Airtable/Airtable_idbbncOsuL_1.png';
+import amplitude_logo from '../../assets/icons/Amplitude/Amplitude_ida8NYsPJK_1.png';
+import databricks_logo from '../../assets/icons/Databricks/Databricks_idF4fnHpaJ_1.png';
+import figma_logo from '../../assets/icons/Figma/Figma_Symbol_1.png';
+import hubspot_logo from '../../assets/icons/HubSpot/HubSpot_Symbol_3.png';
+import intercom_logo from '../../assets/icons/Intercom/Intercom_idJtqMxXFx_1.png';
+import linear_logo from '../../assets/icons/Linear/Linear_Symbol_4.png';
+import looker_logo from '../../assets/icons/Looker/Looker_idKkHKXysy_1.png';
+import mixpanel_logo from '../../assets/icons/Mixpanel/Mixpanel_Symbol_1.png';
+import notion_logo from '../../assets/icons/Notion/Notion_Symbol_4.png';
+import pipedrive_logo from '../../assets/icons/Pipedrive/Pipedrive_id-7ejZnwv_1.png';
+import segment_logo from '../../assets/icons/Segment/Segment_Symbol_7.png';
+import shopify_logo from '../../assets/icons/Shopify-com/Shopify-com_Symbol_4.png';
+import slack_logo from '../../assets/icons/Slack/Slack_Symbol_2.png';
+import snowflake_logo from '../../assets/icons/Snowflake/Snowflake_idCkdSg0B6_1.png';
+import stripe_logo from '../../assets/icons/Stripe/Stripe_Icon_3.jpeg';
+import tableau_logo from '../../assets/icons/Tableau/Tableau_idW4GZaB-5_1.png';
+import twilio_logo from '../../assets/icons/Twilio/Twilio_idseuPD28S_1.png';
+import zapier_logo from '../../assets/icons/Zapier/idgA2tQJF0_1782231759824.jpeg';
+
+
 // Hero Section
 const HERO_CONTENT = {
   meta: "B2B operating infrastructure / 2026 / 정밀한 시스템",
@@ -46,28 +68,34 @@ const FEATURES_CONTENT = {
 // Integrations Section
 const INTEGRATIONS_CONTENT = {
   top_integrations: [
-    { name: 'Salesforce', color: 'bg-blue-500', letter: 'S' },
-    { name: 'Stripe', color: 'bg-violet-500', letter: 'S' },
-    { name: 'HubSpot', color: 'bg-orange-500', letter: 'H' },
-    { name: 'Slack', color: 'bg-emerald-500', letter: 'S' },
-    { name: 'Segment', color: 'bg-sky-500', letter: 'S' },
-    { name: 'Notion', color: 'bg-neutral-800', letter: 'N' },
-    { name: 'Linear', color: 'bg-indigo-500', letter: 'L' },
-    { name: 'Shopify', color: 'bg-green-600', letter: 'S' },
-    { name: 'Zapier', color: 'bg-orange-400', letter: 'Z' },
-    { name: 'Figma', color: 'bg-pink-500', letter: 'F' },
+    { name: 'Salesforce', color: 'bg-blue-500', letter: 'S', image: salesforce_logo },
+    { name: 'Stripe', color: 'bg-violet-500', letter: 'S', image: stripe_logo },
+    { name: 'HubSpot', color: 'bg-orange-500', letter: 'H', image: hubspot_logo },
+    { name: 'Slack', color: 'bg-emerald-500', letter: 'S', image: slack_logo },
+    { name: 'Pipedrive', color: 'bg-green-500', letter: 'P', image: pipedrive_logo },
+    { name: 'Segment', color: 'bg-sky-500', letter: 'S', image: segment_logo },
+    { name: 'Notion', color: 'bg-neutral-800', letter: 'N', image: notion_logo },
+    { name: 'Mixpanel', color: 'bg-purple-500', letter: 'M', image: mixpanel_logo },
+    { name: 'Linear', color: 'bg-indigo-500', letter: 'L', image: linear_logo },
+    { name: 'Shopify', color: 'bg-green-600', letter: 'S', image: shopify_logo },
+    { name: 'Zapier', color: 'bg-orange-400', letter: 'Z', image: zapier_logo },
+    { name: 'Figma', color: 'bg-pink-500', letter: 'F', image: figma_logo },
+    { name: 'Tableau', color: 'bg-blue-700', letter: 'T', image: tableau_logo },
   ],
   bottom_integrations: [
-    { name: 'Intercom', color: 'bg-blue-600', letter: 'I' },
-    { name: 'Pipedrive', color: 'bg-green-500', letter: 'P' },
-    { name: 'Airtable', color: 'bg-blue-400', letter: 'A' },
-    { name: 'Mixpanel', color: 'bg-purple-500', letter: 'M' },
-    { name: 'Amplitude', color: 'bg-indigo-600', letter: 'A' },
-    { name: 'Looker', color: 'bg-amber-500', letter: 'L' },
-    { name: 'Tableau', color: 'bg-blue-700', letter: 'T' },
-    { name: 'Snowflake', color: 'bg-sky-400', letter: 'S' },
-    { name: 'Databricks', color: 'bg-red-500', letter: 'D' },
-    { name: 'Twilio', color: 'bg-red-600', letter: 'T' },
+    { name: 'Intercom', color: 'bg-blue-600', letter: 'I', image: intercom_logo },
+    { name: 'HubSpot', color: 'bg-orange-500', letter: 'H', image: hubspot_logo },
+    { name: 'Pipedrive', color: 'bg-green-500', letter: 'P', image: pipedrive_logo },
+    { name: 'Airtable', color: 'bg-blue-400', letter: 'A', image: airtable_logo },
+    { name: 'Mixpanel', color: 'bg-purple-500', letter: 'M', image: mixpanel_logo },
+    { name: 'Tableau', color: 'bg-blue-700', letter: 'T', image: tableau_logo },
+    { name: 'Amplitude', color: 'bg-indigo-600', letter: 'A', image: amplitude_logo },
+    { name: 'Looker', color: 'bg-amber-500', letter: 'L', image: looker_logo },
+    { name: 'Zapier', color: 'bg-orange-400', letter: 'Z', image: zapier_logo },
+    { name: 'Tableau', color: 'bg-blue-700', letter: 'T', image: tableau_logo },
+    { name: 'Snowflake', color: 'bg-sky-400', letter: 'S', image: snowflake_logo },
+    { name: 'Databricks', color: 'bg-red-500', letter: 'D', image: databricks_logo },
+    { name: 'Twilio', color: 'bg-red-600', letter: 'T', image: twilio_logo },
   ],
   featured_integrations: [
     {
@@ -494,4 +522,18 @@ const FOOTER_CONTENT = {
   info_column: "Selective partnerships for venture-backed B2B operators, funds, \nand GTM teams.",
   back_text: "Back to top",
   footer_quotes: "Built with precision · Designed for scale"
+}
+
+export {
+  HERO_CONTENT,
+  ABOUT_CONTENT,
+  FEATURES_CONTENT,
+  INTEGRATIONS_CONTENT,
+  SIMULATION_CONTENT,
+  PRICING_CONTENT,
+  STEPS_CONTENT,
+  TESTIMONIALS_CONTENT,
+  QNA_CONTENT,
+  CTA_CONTENT,
+  FOOTER_CONTENT,
 }
