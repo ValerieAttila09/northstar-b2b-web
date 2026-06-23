@@ -32,10 +32,14 @@ const ScrollStack = ({
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef(null);
   const lenisRef = useRef(null);
+  const lenisOwnerRef = useRef(false);
   const cardsRef = useRef([]);
+  const cardPositionsRef = useRef([]);
+  const endElementTopRef = useRef(0);
   const lastTransformsRef = useRef(new Map());
   const isUpdatingRef = useRef(false);
   const tickingRef = useRef(false);
+  const scrollListenerRef = useRef(null);
 
   const calculateProgress = useCallback((scrollTop, start, end) => {
     if (scrollTop < start) return 0;
@@ -67,17 +71,41 @@ const ScrollStack = ({
     }
   }, [useWindowScroll]);
 
+  const getDocumentOffset = useCallback(element => {
+    let offset = 0;
+    let el = element;
+
+    while (el) {
+      offset += el.offsetTop || 0;
+      el = el.offsetParent;
+    }
+
+    return offset;
+  }, []);
+
   const getElementOffset = useCallback(
     element => {
       if (useWindowScroll) {
-        const rect = element.getBoundingClientRect();
-        return rect.top + window.scrollY;
-      } else {
-        return element.offsetTop;
+        return getDocumentOffset(element);
       }
+      return element.offsetTop;
     },
-    [useWindowScroll]
+    [useWindowScroll, getDocumentOffset]
   );
+
+  const calculateCardPositions = useCallback(() => {
+    const scroller = scrollerRef.current;
+    const cards = cardsRef.current;
+    if (!cards.length) return;
+
+    cardPositionsRef.current = cards.map(card => getElementOffset(card));
+
+    const endElement = useWindowScroll
+      ? document.querySelector('.scroll-stack-end')
+      : scroller?.querySelector('.scroll-stack-end');
+
+    endElementTopRef.current = endElement ? getElementOffset(endElement) : 0;
+  }, [getElementOffset, useWindowScroll]);
 
   const updateCardTransforms = useCallback(() => {
     if (!cardsRef.current.length || isUpdatingRef.current) return;
@@ -88,16 +116,13 @@ const ScrollStack = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
-    const endElement = useWindowScroll
-      ? document.querySelector('.scroll-stack-end')
-      : scrollerRef.current?.querySelector('.scroll-stack-end');
-
-    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+    const endElementTop = endElementTopRef.current;
+    const positions = cardPositionsRef.current;
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
-      const cardTop = getElementOffset(card);
+      const cardTop = positions[i] ?? getElementOffset(card);
       const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
       const triggerEnd = cardTop - scaleEndPositionPx;
       const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
@@ -111,8 +136,8 @@ const ScrollStack = ({
       let blur = 0;
       if (blurAmount) {
         let topCardIndex = 0;
-        for (let j = 0; j < cardsRef.current.length; j++) {
-          const jCardTop = getElementOffset(cardsRef.current[j]);
+        for (let j = 0; j < positions.length; j++) {
+          const jCardTop = positions[j];
           const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
           if (scrollTop >= jTriggerStart) {
             topCardIndex = j;
@@ -199,28 +224,18 @@ const ScrollStack = ({
 
   const setupLenis = useCallback(() => {
     if (useWindowScroll) {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        touchMultiplier: 2,
-        infinite: false,
-        wheelMultiplier: 1,
-        lerp: 0.1,
-        syncTouch: true,
-        syncTouchLerp: 0.075
-      });
+      const globalLenis = typeof window !== 'undefined' ? window.__lenis : null;
 
-      lenis.on('scroll', handleScroll);
+      if (globalLenis) {
+        globalLenis.on('scroll', handleScroll);
+        lenisRef.current = globalLenis;
+        lenisOwnerRef.current = false;
+        return null;
+      }
 
-      const raf = time => {
-        lenis.raf(time);
-        animationFrameRef.current = requestAnimationFrame(raf);
-      };
-      animationFrameRef.current = requestAnimationFrame(raf);
-
-      lenisRef.current = lenis;
-      return lenis;
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      scrollListenerRef.current = handleScroll;
+      return null;
     } else {
       const scroller = scrollerRef.current;
       if (!scroller) return;
@@ -248,6 +263,7 @@ const ScrollStack = ({
       animationFrameRef.current = requestAnimationFrame(raf);
 
       lenisRef.current = lenis;
+      lenisOwnerRef.current = true;
       return lenis;
     }
   }, [handleScroll, useWindowScroll]);
@@ -265,6 +281,8 @@ const ScrollStack = ({
     cardsRef.current = cards;
     const transformsCache = lastTransformsRef.current;
 
+    calculateCardPositions();
+
     cards.forEach((card, i) => {
       if (i < cards.length - 1) {
         card.style.marginBottom = `${itemDistance}px`;
@@ -281,11 +299,29 @@ const ScrollStack = ({
     setupLenis();
     updateCardTransforms();
 
+    const onResize = () => {
+      calculateCardPositions();
+      updateCardTransforms();
+    };
+
+    window.addEventListener('resize', onResize, { passive: true });
+
     return () => {
+      window.removeEventListener('resize', onResize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      if (lenisRef.current) {
+      if (scrollListenerRef.current) {
+        if (useWindowScroll && lenisRef.current && !lenisOwnerRef.current) {
+          if (typeof lenisRef.current.off === 'function') {
+            lenisRef.current.off('scroll', handleScroll);
+          }
+        } else if (scrollListenerRef.current instanceof Function) {
+          window.removeEventListener('scroll', scrollListenerRef.current);
+        }
+        scrollListenerRef.current = null;
+      }
+      if (lenisRef.current && lenisOwnerRef.current) {
         lenisRef.current.destroy();
       }
       stackCompletedRef.current = false;

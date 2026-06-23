@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,13 +8,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function useSmoothScroll() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const lenis = new Lenis({
       duration: 1.05,
       smoothWheel: true,
       wheelMultiplier: 0.9,
       lerp: 0.08
     });
+
+    if (typeof window !== 'undefined') {
+      window.__lenis = lenis;
+    }
 
     lenis.on("scroll", ScrollTrigger.update);
 
