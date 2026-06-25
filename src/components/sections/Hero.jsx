@@ -5,12 +5,25 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Button from "../UI/Button";
 import NorthStarPhoneMockup from "../common/MobileScreen";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(useGSAP);
 
-export default function Hero() {
+export default function Hero({ content }) {
   const scope = useRef(null);
   const geometry = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const heroTitle = Array.isArray(content?.title)
+    ? content.title
+    : Array.isArray(t.hero?.title)
+      ? t.hero.title
+      : ['Scale', 'Without', 'Drag'];
+  const heroDescription = t.hero?.description || 'Northstar turns fragmented growth operations into one precise revenue system.';
+  const heroButtons = Array.isArray(content?.button_text)
+    ? content.button_text
+    : [t.hero?.primaryCta || 'Simulate Scale', t.hero?.secondaryCta || 'View Method'];
 
   useGSAP(
     () => {
@@ -18,7 +31,7 @@ export default function Hero() {
         gsap.set(".reveal-line", { yPercent: 110, rotate: 1.5 });
         gsap.set(".hero-meta", { autoAlpha: 0, y: 24 });
         gsap.set(".right-content", { autoAlpha: 0 });
-        
+
         const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
         tl.to(".reveal-line", { yPercent: 0, rotate: 0, duration: 1.35, stagger: 0.085, delay: 5.4 })
@@ -71,32 +84,31 @@ export default function Hero() {
         <div className="flex flex-col justify-around gap-6 md:gap-0 border-b border-line p-5 md:p-8 lg:border-b-0 lg:border-r">
           <div className="grid gap-8">
             <p className="hero-meta font-mono text-micro font-bold uppercase text-muted">
-              B2B operating infrastructure / 2026 / 정밀한 시스템
+              {content?.meta ?? t.hero.meta}
             </p>
             <h1 className="font-display font-semibold text-display-lg">
-              <span className="line-mask">
-                <span className="reveal-line">Scale</span>
-              </span>
-              <span className="line-mask">
-                <span className="reveal-line">without</span>
-              </span>
-              <span className="line-mask">
-                <span className="reveal-line">
-                  <span className="text-signal">drag.</span>
+              {heroTitle.map((word, index) => (
+                <span key={`${word}-${index}`} className="line-mask">
+                  <span className="reveal-line">
+                    {index === heroTitle.length - 1 ? (
+                      <span className="text-signal">{word}</span>
+                    ) : (
+                      word
+                    )}
+                  </span>
                 </span>
-              </span>
+              ))}
             </h1>
           </div>
 
           <div className="grid gap-7 md:pt-8 md:grid-cols-[0.8fr_1fr] md:items-end">
             <p className="hero-meta max-w-xl text-md md:text-lg text-charcoal/78">
-              Northstar turns fragmented growth operations into one precise revenue system: tighter workflows, cleaner
-              data, faster decisions.
+              {heroDescription}
             </p>
             <div className="hero-meta flex flex-wrap items-center gap-4 md:justify-end">
-              <Button href="#simulator">Simulate Scale</Button>
+              <Button href="#simulator">{heroButtons[0]}</Button>
               <a href="#method" className="text-micro font-bold uppercase text-charcoal/72">
-                View Method
+                {heroButtons[1]}
               </a>
             </div>
           </div>

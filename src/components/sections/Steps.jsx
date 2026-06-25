@@ -5,10 +5,12 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollStack, { ScrollStackItem } from '../common/ScrollStack';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const steps = [
+const defaultSteps = [
   {
     num: '01',
     title: 'Connect your stack.',
@@ -82,12 +84,21 @@ const steps = [
   },
 ];
 
-export default function Steps() {
+export default function Steps({ content }) {
   const sectionRef = useRef(null);
   const progressLineRef = useRef(null);
   const stepIndicatorsRef = useRef([]);
   const scrollIndicatorRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+
+
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const steps = Array.isArray(t.steps?.items)
+    ? t.steps.items
+    : Array.isArray(content?.steps)
+      ? content.steps
+      : defaultSteps;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -154,7 +165,7 @@ export default function Steps() {
 
       return () => ctx.revert();
     },
-    { scope: sectionRef, dependencies: [] }
+    { scope: sectionRef, dependencies: [steps, language] }
   );
 
   return (
@@ -181,7 +192,7 @@ export default function Steps() {
         <div className="mx-auto max-w-[1600px] space-y-5">
           <div className="flex items-center justify-between gap-4 sm:gap-6 md:gap-8">
             <span className="text-nowrap font-mono text-xs font-bold uppercase text-amber-400 tracking-widest">
-              How it works / 작동 방식
+              {content?.steps_meta ?? t.steps.meta}
             </span>
             <div className="w-full relative">
               <div className="h-px bg-ink w-full" />
@@ -203,7 +214,7 @@ export default function Steps() {
               </div>
             </div>
             <span className="text-nowrap font-mono text-xs text-inverse/40">
-              {steps.length} steps
+              {steps.length} {content?.steps_count ?? t.steps.count}
             </span>
           </div>
           {/* <div className="relative">
@@ -230,6 +241,7 @@ export default function Steps() {
 
       {/* ScrollStack */}
       <ScrollStack
+        key={`scrollstack-${language}`}
         useWindowScroll={true}
         itemDistance={32}
         itemScale={0.04}
@@ -240,13 +252,13 @@ export default function Steps() {
         blurAmount={2}
       >
         {steps.map((step, idx) => (
-          <ScrollStackItem key={idx}>
+          <ScrollStackItem key={`step-${language}-${idx}`}>
             <div className="grid lg:grid-cols-[1.2fr_1fr] gap-0 min-h-[70vh]">
               {/* Left: Content */}
               <div className="p-8 md:p-12 lg:p-16">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="font-mono text-xs font-bold text-amber-400 tracking-widest">
-                    STEP {step.num}
+                    {t.steps.stepLabel} {step.num}
                   </span>
                   <span className="w-8 h-px bg-amber-400" />
                   <span className="font-mono text-xs text-inverse/40">

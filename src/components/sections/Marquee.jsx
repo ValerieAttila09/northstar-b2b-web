@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(useGSAP);
 
@@ -10,6 +12,8 @@ const companies = ["Stripe", "Mercury", "Ramp", "Linear", "Vercel", "Retool", "N
 
 export default function Marquee() {
   const scope = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
 
   useGSAP(
     () => {
@@ -33,7 +37,9 @@ export default function Marquee() {
     <section ref={scope} className="overflow-hidden border-b border-line bg-bone">
       <div className="border-b border-line px-5 py-4 md:px-8">
         <p className="mx-auto max-w-[1600px] text-micro font-bold uppercase text-muted">
-          Companies and operators we are built to collaborate with / 협업 네트워크
+          {language === "id"
+            ? t.marquee.title
+            : t.marquee.title}
         </p>
       </div>
       <div className="marquee-track flex py-7 bg-paper">

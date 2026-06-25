@@ -3,10 +3,12 @@
 import { useMemo, useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(useGSAP);
 
-const tiers = {
+const defaultTiers = {
   seed: {
     label: 'Seed',
     revenue: 1.8,
@@ -42,7 +44,7 @@ const tiers = {
   },
 };
 
-const steps = [
+const defaultSteps = [
   {
     num: '01',
     title: 'Connect',
@@ -66,21 +68,57 @@ const steps = [
   },
 ];
 
-export default function Simulator() {
+export default function Simulator({ content }) {
   const [active, setActive] = useState('growth');
   const [hoveredBar, setHoveredBar] = useState(null);
   const [showGuide, setShowGuide] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const scope = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
   const countersRef = useRef({ revenue: 0, cycle: 0, retention: 0 });
 
-  const data = useMemo(() => tiers[active], [active]);
+  const tiers = useMemo(() => {
+    const source = t.simulator?.tiers ?? content?.graph_data ?? defaultTiers;
+    return source && typeof source === 'object' ? source : defaultTiers;
+  }, [content, t]);
+  const steps = useMemo(() => {
+    const source = t.simulator?.steps ?? content?.steps ?? defaultSteps;
+    return Array.isArray(source) ? source : defaultSteps;
+  }, [content, t]);
+  // const data = useMemo(() => tiers?.[active] ?? defaultTiers.growth, [active, tiers]);
+  const data = useMemo(() => {
+    const selected = tiers?.[active] ?? defaultTiers.growth;
+    return {
+      ...selected,
+      // Paksa bars untuk selalu berupa array. Jika bukan, gunakan default.
+      bars: Array.isArray(selected?.bars) ? selected.bars : defaultTiers.growth.bars,
+      // Paksa nilai numerik untuk selalu berupa angka
+      revenue: typeof selected?.revenue === 'number' ? selected.revenue : defaultTiers.growth.revenue,
+      cycle: typeof selected?.cycle === 'number' ? selected.cycle : defaultTiers.growth.cycle,
+      retention: typeof selected?.retention === 'number' ? selected.retention : defaultTiers.growth.retention,
+    };
+  }, [active, tiers]);
+  const labels = useMemo(() => ({
+    revenue: t.simulator.labels.revenue,
+    cycle: t.simulator.labels.cycle,
+    retention: t.simulator.labels.retention,
+    pipeline: t.simulator.labels.pipeline,
+    recommendation: t.simulator.labels.recommendation,
+    systemLoad: t.simulator.labels.systemLoad,
+    previousTier: t.simulator.labels.previousTier,
+    signalStrength: t.simulator.labels.signalStrength,
+    capacity: t.simulator.labels.capacity,
+    liveModel: t.simulator.labels.liveModel,
+    closeGuide: t.simulator.labels.closeGuide,
+    howItWorks: t.simulator.labels.howItWorks,
+  }), [t]);
 
   const chartPoints = useMemo(() => {
-    return data.bars
-      .map((value, index) => `${index * 25},${100 - value}`)
-      .join(' ');
-  }, [data.bars]);
+    return Array.isArray(data?.bars)
+      ? data.bars.map((value, index) => `${index * 25},${100 - value}`).join(' ')
+      : '';
+  }, [data]);
 
   // Counter animation when tier changes
   useEffect(() => {
@@ -110,7 +148,7 @@ export default function Simulator() {
       setActiveStep((prev) => (prev + 1) % steps.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, [showGuide]);
+  }, [showGuide, steps.length]);
 
   useGSAP(
     () => {
@@ -276,16 +314,14 @@ export default function Simulator() {
         <div className="flex flex-col justify-between gap-12 border border-white/10 p-5 md:p-8 bg-neutral-900/40 backdrop-blur-sm">
           <div>
             <p className="mb-6 font-mono text-xs font-bold uppercase text-white/50 tracking-wider">
-              Scale simulator / 성장 신호
+              {content?.simulator_meta ?? t.simulator.meta}
             </p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
-              Model the next
-              <br />
-              operating layer.
-            </h2>
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight"
+              dangerouslySetInnerHTML={{ __html: content?.simulator_title ?? t.simulator.title }}
+            />
             <p className="mt-6 text-sm text-white/60 max-w-md leading-relaxed">
-              Select a stage to see how Northstar transforms your operating
-              metrics. Watch the numbers evolve in real-time.
+              {content?.short_description ?? t.simulator.shortDescription}
             </p>
           </div>
 
@@ -296,11 +332,10 @@ export default function Simulator() {
                 key={key}
                 type="button"
                 onClick={() => handleTierClick(key)}
-                className={`tier-btn group min-h-14 border px-4 text-left text-sm font-bold uppercase tracking-[0.14em] transition-all duration-300 relative overflow-hidden ${
-                  active === key
-                    ? 'border-amber-400 bg-amber-400 text-black'
-                    : 'border-white/20 text-white/60 hover:border-amber-400 hover:text-white'
-                }`}
+                className={`tier-btn group min-h-14 border px-4 text-left text-sm font-bold uppercase tracking-[0.14em] transition-all duration-300 relative overflow-hidden ${active === key
+                  ? 'border-amber-400 bg-amber-400 text-black'
+                  : 'border-white/20 text-white/60 hover:border-amber-400 hover:text-white'
+                  }`}
               >
                 <span className="relative z-10 flex items-center justify-between">
                   <span>{tier.label}</span>
@@ -331,7 +366,7 @@ export default function Simulator() {
                 <path d="M12 5v14M5 12h14" />
               </svg>
             </span>
-            <span>{showGuide ? 'Close guide' : 'How it works'}</span>
+            <span>{showGuide ? labels.closeGuide : (t.simulator.guide?.button ?? labels.howItWorks)}</span>
           </button>
         </div>
 
@@ -340,17 +375,17 @@ export default function Simulator() {
           {/* Top metrics */}
           <div className="grid border-b border-black/10 md:grid-cols-3">
             <Metric
-              label="Forecast ARR"
+              label={labels.revenue}
               valueId="counter-revenue"
               defaultValue={data.revenueDisplay}
             />
             <Metric
-              label="Sales Cycle"
+              label={labels.cycle}
               valueId="counter-cycle"
               defaultValue={data.cycle + 'd'}
             />
             <Metric
-              label="Net Retention"
+              label={labels.retention}
               valueId="counter-retention"
               defaultValue={data.retention + '%'}
               isRetention
@@ -363,7 +398,7 @@ export default function Simulator() {
             <div className="metric-card min-h-[360px] border border-black/10 p-5">
               <div className="mb-8 flex items-center justify-between">
                 <p className="font-mono text-[10px] font-bold uppercase text-black/50 tracking-wider">
-                  Pipeline quality / 파이프라인
+                  {labels.pipeline}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
@@ -371,7 +406,7 @@ export default function Simulator() {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
                   </span>
                   <p className="font-mono text-[10px] font-bold uppercase text-black tracking-wider">
-                    Live model
+                    {labels.liveModel}
                   </p>
                 </div>
               </div>
@@ -426,7 +461,7 @@ export default function Simulator() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                  {data.bars.map((value, index) => (
+                  {data.bars?.map((value, index) => (
                     <circle
                       key={`${active}-dot-${value}`}
                       className="chart-dot"
@@ -471,7 +506,7 @@ export default function Simulator() {
               </div>
 
               <div className="mt-4 flex justify-between font-mono text-[10px] font-bold uppercase text-black/50">
-                <span>Signal strength</span>
+                <span>{labels.signalStrength}</span>
                 <span className="text-black">{data.bars.at(-1)}%</span>
               </div>
             </div>
@@ -480,7 +515,7 @@ export default function Simulator() {
             <div className="grid gap-4">
               <div className="metric-card border border-black/10 p-5">
                 <p className="mb-4 font-mono text-[10px] font-bold uppercase text-black/50 tracking-wider">
-                  Recommendation / 제안
+                  {labels.recommendation}
                 </p>
                 <p className="text-xl md:text-2xl leading-tight font-medium">
                   {data.note}
@@ -509,7 +544,7 @@ export default function Simulator() {
 
               <div className="metric-card border border-black/10 bg-black p-5 text-white">
                 <p className="mb-4 font-mono text-[10px] font-bold uppercase text-white/50 tracking-wider">
-                  System load
+                  {labels.systemLoad}
                 </p>
                 <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                   <div
@@ -518,7 +553,7 @@ export default function Simulator() {
                   />
                 </div>
                 <div className="mt-3 flex justify-between font-mono text-[10px] text-white/50">
-                  <span>Capacity</span>
+                  <span>{labels.capacity}</span>
                   <span className="text-amber-400 font-bold">
                     {data.bars.at(-1)}%
                   </span>
@@ -528,7 +563,7 @@ export default function Simulator() {
               {/* Mini comparison */}
               <div className="metric-card border border-black/10 p-4">
                 <p className="mb-3 font-mono text-[10px] font-bold uppercase text-black/50 tracking-wider">
-                  vs Previous Tier
+                  {labels.previousTier}
                 </p>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div>
@@ -540,8 +575,8 @@ export default function Simulator() {
                       {active === 'seed'
                         ? '—'
                         : active === 'growth'
-                        ? '4.8x'
-                        : '2.8x'}
+                          ? '4.8x'
+                          : '2.8x'}
                     </div>
                   </div>
                   <div>
@@ -552,8 +587,8 @@ export default function Simulator() {
                       {active === 'seed'
                         ? '—'
                         : active === 'growth'
-                        ? '-12d'
-                        : '-11d'}
+                          ? '-12d'
+                          : '-11d'}
                     </div>
                   </div>
                   <div>
@@ -564,8 +599,8 @@ export default function Simulator() {
                       {active === 'seed'
                         ? '—'
                         : active === 'growth'
-                        ? '+5%'
-                        : '+5%'}
+                          ? '+5%'
+                          : '+5%'}
                     </div>
                   </div>
                 </div>
@@ -595,34 +630,31 @@ export default function Simulator() {
           </button>
 
           <p className="font-mono text-xs font-bold uppercase text-amber-400 tracking-wider mb-4">
-            How it works / 작동 방식
+            {content?.guide_panel?.sub_title ?? 'How it works / 작동 방식'}
           </p>
-          <h3 className="text-3xl font-bold mb-2">
-            Three steps to
-            <br />
-            operating clarity.
-          </h3>
+          <h3
+            className="text-3xl font-bold mb-2"
+            dangerouslySetInnerHTML={{ __html: content?.guide_panel?.title ?? 'Three steps to<br />operating clarity.' }}
+          />
           <p className="text-sm text-white/60 mb-8">
-            Northstar compresses the messy middle into a repeatable system.
+            {content?.guide_panel?.short_description ?? 'Northstar compresses the messy middle into a repeatable system.'}
           </p>
 
           <div className="space-y-4">
             {steps.map((step, idx) => (
               <div
                 key={idx}
-                className={`guide-step border p-5 transition-all duration-500 ${
-                  activeStep === idx
-                    ? 'border-amber-400 bg-amber-400/5'
-                    : 'border-white/10'
-                }`}
+                className={`guide-step border p-5 transition-all duration-500 ${activeStep === idx
+                  ? 'border-amber-400 bg-amber-400/5'
+                  : 'border-white/10'
+                  }`}
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
-                      activeStep === idx
-                        ? 'bg-amber-400 text-black'
-                        : 'bg-white/5 text-white/60'
-                    }`}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${activeStep === idx
+                      ? 'bg-amber-400 text-black'
+                      : 'bg-white/5 text-white/60'
+                      }`}
                   >
                     <svg
                       width="18"
@@ -660,17 +692,16 @@ export default function Simulator() {
               <button
                 key={idx}
                 onClick={() => setActiveStep(idx)}
-                className={`h-1.5 rounded-full transition-all ${
-                  activeStep === idx
-                    ? 'w-8 bg-amber-400'
-                    : 'w-1.5 bg-white/20 hover:bg-white/40'
-                }`}
+                className={`h-1.5 rounded-full transition-all ${activeStep === idx
+                  ? 'w-8 bg-amber-400'
+                  : 'w-1.5 bg-white/20 hover:bg-white/40'
+                  }`}
               />
             ))}
           </div>
 
           <button className="mt-8 w-full py-4 bg-amber-400 text-black font-bold uppercase tracking-wider text-sm hover:bg-amber-300 transition-colors">
-            Start your simulation →
+            {content?.guide_panel?.button_text ?? 'Start your simulation →'}
           </button>
         </div>
       )}

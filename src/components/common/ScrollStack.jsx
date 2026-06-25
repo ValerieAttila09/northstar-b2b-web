@@ -196,21 +196,7 @@ const ScrollStack = ({
     });
 
     isUpdatingRef.current = false;
-  }, [
-    itemScale,
-    itemStackDistance,
-    stackPosition,
-    scaleEndPosition,
-    baseScale,
-    rotationAmount,
-    blurAmount,
-    useWindowScroll,
-    onStackComplete,
-    calculateProgress,
-    parsePercentage,
-    getScrollData,
-    getElementOffset
-  ]);
+  }, [itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, rotationAmount, blurAmount, onStackComplete, calculateProgress, parsePercentage, getScrollData, getElementOffset]);
 
   const handleScroll = useCallback(() => {
     if (!tickingRef.current) {
@@ -306,7 +292,13 @@ const ScrollStack = ({
 
     window.addEventListener('resize', onResize, { passive: true });
 
+    const timeoutId = setTimeout(() => {
+      calculateCardPositions();
+      updateCardTransforms();
+    }, 100);
+
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('resize', onResize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -330,37 +322,23 @@ const ScrollStack = ({
       isUpdatingRef.current = false;
       tickingRef.current = false;
     };
-  }, [
-    itemDistance,
-    itemScale,
-    itemStackDistance,
-    stackPosition,
-    scaleEndPosition,
-    baseScale,
-    scaleDuration,
-    rotationAmount,
-    blurAmount,
-    useWindowScroll,
-    onStackComplete,
-    setupLenis,
-    updateCardTransforms
-  ]);
+  }, [children, itemDistance, itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, scaleDuration, rotationAmount, blurAmount, useWindowScroll, onStackComplete, setupLenis, updateCardTransforms, calculateCardPositions, handleScroll]);
 
   const containerStyles = useWindowScroll
     ? {
-        overscrollBehavior: 'contain',
-        WebkitOverflowScrolling: 'touch',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)'
-      }
+      overscrollBehavior: 'contain',
+      WebkitOverflowScrolling: 'touch',
+      WebkitTransform: 'translateZ(0)',
+      transform: 'translateZ(0)'
+    }
     : {
-        overscrollBehavior: 'contain',
-        WebkitOverflowScrolling: 'touch',
-        scrollBehavior: 'smooth',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
-        willChange: 'scroll-position'
-      };
+      overscrollBehavior: 'contain',
+      WebkitOverflowScrolling: 'touch',
+      scrollBehavior: 'smooth',
+      WebkitTransform: 'translateZ(0)',
+      transform: 'translateZ(0)',
+      willChange: 'scroll-position'
+    };
 
   const containerClassName = useWindowScroll
     ? `relative w-full ${className}`.trim()

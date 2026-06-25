@@ -4,15 +4,17 @@ import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const links = [
-  { label: "Platform", href: "#platform" },
-  { label: "About", href: "#about" },
-  { label: "Method", href: "#method" },
-  { label: "Proof", href: "#testimonials" },
-  { label: "QNA", href: "#qna" }
+  { key: "platform", href: "#platform" },
+  { key: "about", href: "#about" },
+  { key: "method", href: "#method" },
+  { key: "proof", href: "#testimonials" },
+  { key: "qna", href: "#qna" }
 ];
 
 export default function Navbar() {
@@ -29,6 +31,8 @@ export default function Navbar() {
   const linkRefs = useRef([]);
   const menuLinkRefs = useRef([]);
   const currentTheme = useRef("light");
+  const { language, toggleLanguage } = useLanguage();
+  const t = messages[language] || messages.en;
 
   const setLinkRef = (node, index) => {
     linkRefs.current[index] = node;
@@ -235,18 +239,26 @@ export default function Navbar() {
           <div className="hidden items-center gap-8 lg:flex">
             {links.map((link, index) => (
               <a
-                key={link.label}
+                key={link.key}
                 ref={(node) => setLinkRef(node, index)}
                 href={link.href}
                 onMouseMove={(event) => moveElement(event, linkRefs.current[index])}
                 onMouseLeave={() => resetElement(linkRefs.current[index])}
                 className="text-micro font-bold uppercase text-charcoal/80"
               >
-                {link.label}
+                {t.nav[link.key]}  {/* ← Ganti dari {link.label} */}
               </a>
             ))}
           </div>
-          <div className="relative z-[92] justify-self-end">
+          <div className="relative z-[92] flex items-center gap-3 justify-self-end">
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="hidden rounded-full border border-charcoal/20 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal/80 transition-colors duration-300 hover:bg-charcoal hover:text-inverse lg:inline-flex"
+              aria-label={t.nav.switchLanguage}
+            >
+              {language === 'id' ? 'EN' : 'ID'}
+            </button>
             <a
               ref={ctaRef}
               href="#simulator"
@@ -254,7 +266,7 @@ export default function Navbar() {
               onMouseLeave={() => resetElement(ctaRef.current)}
               className="hidden min-h-12 items-center justify-center border border-charcoal bg-charcoal px-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse transition-colors duration-300 ease-editorial lg:inline-flex"
             >
-              Model ROI
+              {t.nav.modelRoi}
             </a>
             <button
               ref={menuButtonRef}
@@ -290,7 +302,7 @@ export default function Navbar() {
             </div>
             <div className="grid gap-2">
               {links.map((link, index) => (
-                <div key={link.label} className="overflow-hidden">
+                <div key={link.key} className="overflow-hidden">
                   <a
                     ref={(node) => setMenuLinkRef(node, index)}
                     href={link.href}
@@ -299,7 +311,7 @@ export default function Navbar() {
                     onMouseLeave={() => resetElement(menuLinkRefs.current[index])}
                     className="mobile-menu-item block font-display text-[13vw] leading-[0.92] text-inverse sm:text-[12vw] md:text-8xl p-1.5"
                   >
-                    {link.label}
+                    {t.nav[link.key]}
                   </a>
                 </div>
               ))}
@@ -307,18 +319,30 @@ export default function Navbar() {
           </div>
 
           <div className="grid gap-5 border-t border-inverse/16 pt-6">
-            <a
-              ref={mobileCtaRef}
-              href="#simulator"
-              onClick={closeMenu}
-              className="mobile-menu-item text-[#111111] inline-flex min-h-14 items-center justify-center border border-inverse bg-charcoal px-6 text-xs font-semibold uppercase tracking-[0.16em]"
-            >
-              Model ROI
-            </a>
+            <div className="mobile-menu-item flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  toggleLanguage();
+                  closeMenu();
+                }}
+                className="inline-flex min-h-12 items-center justify-center border border-inverse/40 px-4 text-xs font-semibold uppercase tracking-[0.16em] text-inverse"
+              >
+                {language === 'id' ? t.nav.switchToEnglish : t.nav.switchToIndonesian}
+              </button>
+              <a
+                ref={mobileCtaRef}
+                href="#simulator"
+                onClick={closeMenu}
+                className="text-[#111111] inline-flex min-h-14 items-center justify-center border border-inverse bg-charcoal px-6 text-xs font-semibold uppercase tracking-[0.16em]"
+              >
+                {t.nav.modelRoi}
+              </a>
+            </div>
             <div className="mobile-menu-item text-inverse flex justify-between text-micro font-bold uppercase text-inverse/48">
-              <span>Jakarta / Singapore</span>
+              <span>{t.nav.location}</span>
               <a href="#contact" onClick={closeMenu}>
-                Contact
+                {t.nav.contact}
               </a>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { IBM_Plex_Mono, Noto_Sans_KR, Space_Grotesk } from "next/font/google";
 import "../styles/globals.css";
 import SmoothScrollProvider from "../components/common/SmoothScrollProvider";
+import { LanguageProvider } from "../context/LanguageContext";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${notoSansKr.variable}`}>
       <body className="relative min-h-screen">
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <LanguageProvider>
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

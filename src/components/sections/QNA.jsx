@@ -2,8 +2,10 @@
 
 import { useRef, useState } from "react";
 import gsap from "gsap";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
-const questions = [
+const defaultQuestions = [
   {
     question: "What stage of company is Northstar built for?",
     answer:
@@ -26,9 +28,16 @@ const questions = [
   }
 ];
 
-export default function QNA() {
+export default function QNA({ content }) {
   const [open, setOpen] = useState(0);
   const answerRefs = useRef([]);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const questions = Array.isArray(t.qna?.questions)
+    ? t.qna.questions
+    : Array.isArray(content?.questions)
+      ? content.questions
+      : [];
 
   const toggle = (index) => {
     const next = open === index ? -1 : index;
@@ -51,8 +60,8 @@ export default function QNA() {
     <section id="qna" className="border-b border-line bg-bone px-5 md:px-8">
       <div className="py-24 md:py-38 mx-auto grid max-w-[1600px] border-x border-line lg:grid-cols-[0.72fr_1.28fr]">
         <div className="border-line p-5 md:p-8 lg:border-y lg:border-r">
-          <p className="mb-8 text-micro font-bold uppercase text-muted">QNA / operating fit</p>
-          <h2 className="font-display text-xl md:text-display-md">Questions before the first system map.</h2>
+          <p className="mb-8 text-micro font-bold uppercase text-muted">{content?.qna_meta ?? t.qna.meta}</p>
+          <h2 className="font-display text-xl md:text-display-md">{content?.qna_title ?? t.qna.title}</h2>
         </div>
         <div className="border-y border-line">
           {questions.map((item, index) => (

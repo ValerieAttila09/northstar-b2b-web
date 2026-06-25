@@ -6,13 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import OwnerImage from "../../assets/owner.jpg";
 import Image from "next/image";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const collaborators = ["Data Architects / 데이터", "GTM Operators / 실행", "Venture Partners / 투자", "RevOps Leads / 수익"];
-
-export default function About() {
+export default function About({ content }) {
   const scope = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
 
   useGSAP(
     () => {
@@ -56,6 +58,14 @@ export default function About() {
     { scope }
   );
 
+  const collaboratorLabel = t.about?.collaboratorLabel || 'Collaborator';
+  const collaboratorsHeading = t.about?.collaboratorsTitle || 'Collaborators';
+  const founderDescription = t.about?.founderDescription || '';
+  const aboutTitle = t.about?.title || 'Built by operators who prefer systems over spectacle.';
+  const aboutDescriptions = Array.isArray(t.about?.descriptions) ? t.about.descriptions : [];
+  const aboutStats = Array.isArray(t.about?.stats) ? t.about.stats : [];
+  const collaborators = Array.isArray(t.about?.collaborators) ? t.about.collaborators : [];
+
   return (
     <section id="about" ref={scope} className="overflow-hidden border-b border-line px-5 md:px-8">
       <div className="mx-auto grid max-w-[1600px] border-x border-line lg:grid-cols-[0.9fr_1.1fr]">
@@ -64,13 +74,13 @@ export default function About() {
             <Image src={OwnerImage} alt="Owner Image" height={720} width={480} className="w-full h-full object-cover" />
             <div className="flex h-auto flex-col justify-between p-5 md:p-8 bg-charcoal">
               <div className="flex justify-between text-micro font-bold uppercase text-inverse/54 mb-4">
-                <span>Founder profile / 창업자</span>
+                <span>{t.about.founderProfile}</span>
                 <span>01</span>
               </div>
               <div>
                 <p className="font-display text-7xl leading-none md:text-8xl">Marcus Reyman Jr.</p>
                 <p className="mt-5 max-w-md text-sm leading-6 text-inverse/62">
-                  Former operating partner and systems architect for B2B scale-ups across SEA and the US.
+                  {founderDescription}
                 </p>
               </div>
             </div>
@@ -78,28 +88,21 @@ export default function About() {
         </div>
 
         <div className="py-[12rem] px-5 md:px-8">
-          <p className="mb-8 font-mono text-micro font-bold uppercase text-muted">About the company / 회사의 구조</p>
-          <h2 className="max-w-5xl font-display text-display-md">
-            Built by operators who prefer <span className="text-signal">systems</span> over spectacle.
-          </h2>
+          <p className="mb-8 font-mono text-micro font-bold uppercase text-muted">
+            {content?.collaborators_title ? collaboratorsHeading : t.about.sectionMeta}
+          </p>
+          <h2
+            className="max-w-5xl font-display text-display-md"
+            dangerouslySetInnerHTML={{ __html: aboutTitle }}
+          />
           <div className="mt-12 grid gap-8 text-body-xl text-charcoal/72 md:grid-cols-2">
-            <p>
-              Northstar was founded to help ambitious B2B companies cross the messy middle: the stage where dashboards
-              multiply, leadership rhythm breaks, and every team invents its own version of truth.
-            </p>
-            <p>
-              Our collaborators combine revenue operations, analytics engineering, venture operating experience, and
-              product systems design. The result is a practical operating layer that looks simple because the complexity
-              is handled underneath.
-            </p>
+            {aboutDescriptions.map((paragraph, index) => (
+              <p key={`${paragraph}-${index}`}>{paragraph}</p>
+            ))}
           </div>
 
           <div className="about-stats mt-16 grid border border-line md:grid-cols-3">
-            {[
-              ["42", "Scale systems shipped"],
-              ["$1.2B", "Pipeline modeled"],
-              ["14", "Markets supported"]
-            ].map(([value, label]) => (
+            {aboutStats.map(([value, label]) => (
               <div key={label} className="about-stat border-b border-line p-5 md:border-b-0 md:border-r md:p-6 last:md:border-r-0">
                 <p className="font-display text-6xl leading-none text-charcoal">{value}</p>
                 <p className="mt-8 text-micro font-bold uppercase text-muted">{label}</p>
@@ -111,7 +114,7 @@ export default function About() {
             {collaborators.map((item) => (
               <div key={item} className="flex items-center justify-between border-t border-line py-5">
                 <span className="text-xl sm:text-2xl md:text-4xl">{item}</span>
-                <span className="text-micro font-bold uppercase text-muted">Collaborator</span>
+                <span className="text-micro font-bold uppercase text-muted">{collaboratorLabel}</span>
               </div>
             ))}
           </div>

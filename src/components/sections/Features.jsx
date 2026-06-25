@@ -5,29 +5,20 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import GridLine from "../UI/GridLine";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const features = [
-  {
-    kicker: "01 / Data / 데이터",
-    title: "Clean decision layers",
-    body: "Normalize product, CRM, billing, and success data into one operating model with executive-grade visibility."
-  },
-  {
-    kicker: "02 / Workflow / 흐름",
-    title: "Revenue motion design",
-    body: "Map the handoffs, rules, and automations that remove drag between sales, onboarding, and expansion."
-  },
-  {
-    kicker: "03 / Control / 통제",
-    title: "Scale governance",
-    body: "Build lightweight rituals and metrics so teams can move faster without burying leadership in noise."
-  }
-];
-
-export default function Features() {
+export default function Features({ content }) {
   const scope = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const featureItems = Array.isArray(t.features?.items)
+    ? t.features.items
+    : Array.isArray(content?.features)
+      ? content.features
+      : [];
 
   useGSAP(
     () => {
@@ -95,10 +86,11 @@ export default function Features() {
     <section ref={scope} id="method" className="relative overflow-hidden border-b border-line px-5 md:px-8">
       <div className="mx-auto max-w-[1600px] border-x border-line py-8 sm:py-12 md:py-24">
         <div className="grid gap-8 p-5 md:grid-cols-[0.8fr_1.2fr] md:p-8">
-          <p className="font-mono text-micro font-bold uppercase text-muted">Features / operating clarity / 구조</p>
-          <h2 className="max-w-5xl font-display text-display-md">
-            A strict system for teams outgrowing <span className="text-signal">improvisation.</span>
-          </h2>
+          <p className="font-mono text-micro font-bold uppercase text-muted">{content?.features_meta ?? t.features.meta}</p>
+          <h2
+            className="max-w-5xl font-display text-display-md"
+            dangerouslySetInnerHTML={{ __html: content?.features_title ?? t.features.title }}
+          />
         </div>
 
         <div className="relative overflow-hidden border-b border-line">
@@ -112,7 +104,7 @@ export default function Features() {
           </div>
 
           <div className="grid md:grid-cols-3">
-            {features.map((feature) => (
+            {featureItems.map((feature) => (
               <article
                 key={feature.title}
                 className="feature-card group min-h-[480px] border-b border-line p-5 transition-colors duration-500 ease-editorial hover:bg-charcoal hover:text-inverse md:border-b-0 md:p-8"

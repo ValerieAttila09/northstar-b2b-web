@@ -4,10 +4,12 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useLanguage } from "../../context/LanguageContext";
+import messages from "../../i18n/messages";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const testimonials = [
+const defaultTestimonials = [
   {
     quote:
       "Northstar gave our leadership team a single operating view without forcing every department into a heavy platform migration.",
@@ -28,8 +30,15 @@ const testimonials = [
   }
 ];
 
-export default function Testimonials() {
+export default function Testimonials({ content }) {
   const scope = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const testimonials = Array.isArray(t.testimonials?.items)
+    ? t.testimonials.items
+    : Array.isArray(content?.testimonials)
+      ? content.testimonials
+      : defaultTestimonials;
 
   useGSAP(
     () => {
@@ -61,8 +70,8 @@ export default function Testimonials() {
     <section id="testimonials" ref={scope} className="border-b border-line px-5 md:px-8">
       <div className="mx-auto pt-24 max-w-[1600px] border-x border-line">
         <div className="grid gap-8 border-b border-line p-5 md:grid-cols-[0.8fr_1.2fr] md:p-8">
-          <p className="text-micro font-bold uppercase text-muted">Testimonials / field notes</p>
-          <h2 className="max-w-5xl font-display text-display-md">Proof from teams operating under pressure.</h2>
+          <p className="text-micro font-bold uppercase text-muted">{content?.testimonials_meta ?? t.testimonials.meta}</p>
+          <h2 className="max-w-5xl font-display text-display-md">{content?.testimonials_title ?? t.testimonials.title}</h2>
         </div>
 
         <div className="grid md:grid-cols-3">

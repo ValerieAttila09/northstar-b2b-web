@@ -4,14 +4,23 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function CTA() {
+export default function CTA({ content }) {
   const sectionRef = useRef(null);
   const frameRef = useRef(null);
   const titleRef = useRef(null);
   const buttonRef = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const ctaTitle = t.cta.title;
+  const ctaDescription = t.cta.description;
+  const ctaButtonLabel = t.cta.button;
+  const ctaTrust1 = t.cta.trust1;
+  const ctaTrust2 = t.cta.trust2;
 
   useGSAP(
     () => {
@@ -184,13 +193,13 @@ export default function CTA() {
           {/* Left side */}
           <div>
             <p className="cta-label mb-8 font-mono text-xs font-bold uppercase text-amber-400 tracking-widest">
-              Final call / board-ready operations
+              {content?.cta_meta ?? t.cta.meta}
             </p>
             <h2
               ref={titleRef}
               className="text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold leading-[0.95] tracking-tight overflow-hidden"
             >
-              {'Build the operating system your next stage already requires.'
+              {(content?.cta_title ?? ctaTitle)
                 .split(' ')
                 .map((word, idx) => (
                   <span
@@ -205,11 +214,9 @@ export default function CTA() {
 
           {/* Right side */}
           <div className="flex flex-col justify-between gap-12 lg:items-end lg:text-right">
-            <p className="cta-desc max-w-md text-lg text-white/70 leading-relaxed">
-              Start with a <span className="text-amber-400 font-semibold">45-minute</span>{' '}
-              systems audit. We map the friction, identify the fastest leverage,
-              and define the first implementation sprint.
-            </p>
+            <p className="cta-desc max-w-md text-lg text-white/70 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: content?.description ?? ctaDescription.replace('<highlight>', '<span className="text-amber-400 font-semibold">').replace('</highlight>', '</span>') }}
+            />
 
             <button
               ref={buttonRef}
@@ -218,7 +225,7 @@ export default function CTA() {
               onClick={() => (window.location.href = 'mailto:studio@northstar.systems')}
               className="group relative inline-flex items-center gap-3 bg-white text-black px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-amber-400 transition-colors duration-300 overflow-hidden"
             >
-              <span className="relative z-10">Book Audit</span>
+              <span className="relative z-10">{content?.button_text ?? ctaButtonLabel}</span>
               <svg
                 className="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-1"
                 viewBox="0 0 24 24"
@@ -235,9 +242,9 @@ export default function CTA() {
             <div className="cta-desc flex items-center gap-6 text-xs text-white/40 font-mono uppercase tracking-wider">
               <span className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                3 slots left
+                {content?.trust_indicators?.[0] ?? ctaTrust1}
               </span>
-              <span>Q3 2026</span>
+              <span>{content?.trust_indicators?.[1] ?? ctaTrust2}</span>
             </div>
           </div>
         </div>

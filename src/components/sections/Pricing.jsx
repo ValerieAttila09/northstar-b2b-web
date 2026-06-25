@@ -4,10 +4,12 @@ import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const plans = [
+const defaultPlans = [
   {
     id: 'foundation',
     label: 'Foundation',
@@ -101,7 +103,7 @@ const plans = [
   },
 ];
 
-const faqs = [
+const defaultFaqs = [
   {
     q: 'Do you replace our CRM, BI, or internal tooling?',
     a: 'No. Northstar sits above your existing stack as the operating layer. We integrate with your CRM, billing, and data sources — we don\'t ask you to rip and replace.',
@@ -120,10 +122,46 @@ const faqs = [
   },
 ];
 
-export default function Pricing() {
+export default function Pricing({ content }) {
   const sectionRef = useRef(null);
   const [openFaq, setOpenFaq] = useState(null);
   const [hoveredPlan, setHoveredPlan] = useState(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  // Gunakan defaultPlans sebagai base untuk memastikan harga benar
+  const basePlans = defaultPlans;
+
+  // Jika ada i18n/content plans, merge hanya field yang perlu diterjemahkan
+  const i18nPlans = Array.isArray(t.pricing?.plans) ? t.pricing.plans : [];
+  const contentPlans = Array.isArray(content?.plans) ? content.plans : [];
+
+  const plans = basePlans.map((defaultPlan, idx) => {
+    const i18nPlan = i18nPlans[idx] || contentPlans[idx] || {};
+
+    // Merge: pertahankan harga dari default, tapi gunakan terjemahan untuk text lain
+    return {
+      ...defaultPlan,  // Harga dan priceNumeric dari default (BENAR!)
+      ...i18nPlan,     // Override dengan i18n untuk label, tagline, features, dll
+      // Tapi pastikan price dan priceNumeric tetap dari default
+      price: defaultPlan.price,
+      priceNumeric: defaultPlan.priceNumeric,
+    };
+  });
+
+  const faqs = Array.isArray(t.pricing?.faqs)
+  ? t.pricing.faqs
+  : Array.isArray(content?.faqs)
+    ? content.faqs
+    : defaultFaqs;
+
+  const popularLabel = t.pricing?.popular || 'Most Popular';
+  const featuresLabel = t.pricing?.features || 'Features';
+  const faqSubtitle = t.pricing?.faqSubtitle || 'Questions';
+  const faqTitle = t.pricing?.faqTitle || 'Questions before the first system map.';
+  const noteLines = Array.isArray(t.pricing?.note) ? t.pricing.note : ['Annual billing · Save 20%', 'All plans · 30-day sprint included'];
+  const bottomCtaTitle = t.pricing?.bottomCta?.title || 'Not sure which tier fits?';
+  const bottomCtaDescription = t.pricing?.bottomCta?.description || 'Book a free 30-minute systems audit. We\'ll map your current operating layer and recommend the right starting point.';
+  const bottomCtaButtonText = t.pricing?.bottomCta?.buttonText || 'Book Free Audit';
 
   useGSAP(
     () => {
@@ -185,12 +223,66 @@ export default function Pricing() {
         );
 
         // Price numbers count-up effect - FIXED
+        // const priceElements = gsap.utils.toArray('.price-value');
+        // priceElements.forEach((el, idx) => {
+        //   const targetValue = plans[idx].priceNumeric;
+
+        //   if (targetValue === null) {
+        //     // Handle "Custom" - just fade in
+        //     gsap.fromTo(
+        //       el,
+        //       { opacity: 0, y: 20 },
+        //       {
+        //         opacity: 1,
+        //         y: 0,
+        //         duration: 0.8,
+        //         delay: 0.8 + idx * 0.1,
+        //         ease: 'power2.out',
+        //         scrollTrigger: {
+        //           trigger: '.pricing-grid',
+        //           start: 'top 70%',
+        //           toggleActions: 'play none none none',
+        //         },
+        //       }
+        //     );
+        //   } else {
+        //     // Animate numeric prices
+        //     const counter = { value: 0 };
+
+        //     gsap.to(counter, {
+        //       value: targetValue,
+        //       duration: 1.5,
+        //       ease: 'power2.out',
+        //       delay: 0.8 + idx * 0.15,
+        //       onUpdate: () => {
+        //         const formatted = '$' + Math.round(counter.value).toLocaleString('en-US');
+        //         el.textContent = formatted;
+        //       },
+        //       scrollTrigger: {
+        //         trigger: '.pricing-grid',
+        //         start: 'top 70%',
+        //         toggleActions: 'play none none none',
+        //       },
+        //     });
+        //   }
+        // });
+        // Price numbers count-up effect - IMPROVED
         const priceElements = gsap.utils.toArray('.price-value');
         priceElements.forEach((el, idx) => {
-          const targetValue = plans[idx].priceNumeric;
-          
-          if (targetValue === null) {
-            // Handle "Custom" - just fade in
+          const plan = plans[idx];
+          const targetValue = typeof plan.priceNumeric === 'number' ? plan.priceNumeric : null;
+
+          // Fallback: try to extract number from price string if priceNumeric is missing
+          let numericValue = targetValue;
+          if (numericValue === null && typeof plan.price === 'string') {
+            const match = plan.price.match(/[\d,]+/);
+            if (match) {
+              numericValue = parseInt(match[0].replace(/,/g, ''), 10);
+            }
+          }
+
+          if (numericValue === null || isNaN(numericValue)) {
+            // Handle "Custom" or non-numeric prices - just fade in
             gsap.fromTo(
               el,
               { opacity: 0, y: 20 },
@@ -210,9 +302,9 @@ export default function Pricing() {
           } else {
             // Animate numeric prices
             const counter = { value: 0 };
-            
+
             gsap.to(counter, {
-              value: targetValue,
+              value: numericValue,
               duration: 1.5,
               ease: 'power2.out',
               delay: 0.8 + idx * 0.15,
@@ -339,17 +431,14 @@ export default function Pricing() {
         {/* Header */}
         <div className="pricing-header mb-16 md:mb-20">
           <p className="font-mono text-xs font-bold uppercase text-amber-400 tracking-widest mb-6">
-            Pricing & Packaging / 가격 및 패키지
+            {content?.pricing_meta ?? t.pricing.meta}
           </p>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight max-w-4xl">
-            Transparent pricing.
-            <br />
-            <span className="text-white/40">No surprises at scale.</span>
-          </h2>
+          <h2
+            className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight max-w-4xl"
+            dangerouslySetInnerHTML={{ __html: content?.pricing_title ?? t.pricing.title }}
+          />
           <p className="mt-6 text-lg text-white/60 max-w-2xl leading-relaxed">
-            Choose the operating layer that matches your stage. Start lean,
-            scale without friction. Every plan includes a 30-day implementation
-            sprint.
+            {content?.short_description ?? t.pricing.description}
           </p>
 
           {/* Toggle / Note */}
@@ -357,11 +446,11 @@ export default function Pricing() {
             <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-4 py-2">
               <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
               <span className="text-xs font-mono uppercase tracking-wider text-white/70">
-                Annual billing · Save 20%
+                {noteLines[0]}
               </span>
             </div>
             <span className="text-xs text-white/40 font-mono">
-              All plans · 30-day sprint included
+              {noteLines[1]}
             </span>
           </div>
         </div>
@@ -374,16 +463,15 @@ export default function Pricing() {
               id={`card-${plan.id}`}
               onMouseEnter={() => handleCardHover(plan.id)}
               onMouseLeave={() => handleCardLeave(plan.id)}
-              className={`pricing-card group relative flex flex-col border transition-all duration-300 ${
-                plan.popular
-                  ? 'border-amber-400 bg-gradient-to-b from-amber-400/5 to-transparent'
-                  : 'border-white/10 bg-white/[0.02] hover:border-white/20'
-              }`}
+              className={`pricing-card group relative flex flex-col border transition-all duration-300 ${plan.popular
+                ? 'border-amber-400 bg-gradient-to-b from-amber-400/5 to-transparent'
+                : 'border-white/10 bg-white/[0.02] hover:border-white/20'
+                }`}
             >
               {/* Popular badge */}
               {plan.popular && (
                 <div className="popular-badge absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-black px-4 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                  Most Popular
+                  {popularLabel}
                 </div>
               )}
 
@@ -391,11 +479,10 @@ export default function Pricing() {
               <div className="p-6 md:p-8 border-b border-white/10">
                 <div className="flex items-start justify-between mb-4">
                   <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      plan.popular
-                        ? 'bg-amber-400 text-black'
-                        : 'bg-white/5 text-white/60'
-                    }`}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${plan.popular
+                      ? 'bg-amber-400 text-black'
+                      : 'bg-white/5 text-white/60'
+                      }`}
                   >
                     <svg
                       width="18"
@@ -437,11 +524,10 @@ export default function Pricing() {
               {/* CTA Button */}
               <div className="p-6 md:p-8 pt-4">
                 <button
-                  className={`w-full py-3.5 font-bold uppercase tracking-wider text-xs transition-all duration-300 ${
-                    plan.popular
-                      ? 'bg-amber-400 text-black hover:bg-amber-300'
-                      : 'bg-white text-black hover:bg-white/90'
-                  }`}
+                  className={`w-full py-3.5 font-bold uppercase tracking-wider text-xs transition-all duration-300 ${plan.popular
+                    ? 'bg-amber-400 text-black hover:bg-amber-300'
+                    : 'bg-white text-black hover:bg-white/90'
+                    }`}
                 >
                   {plan.cta}
                 </button>
@@ -450,7 +536,7 @@ export default function Pricing() {
               {/* Features */}
               <div className="p-6 md:p-8 pt-0 flex-1">
                 <p className="font-mono text-[10px] font-bold uppercase text-white/40 tracking-widest mb-4">
-                  Features
+                  {featuresLabel}
                 </p>
                 <ul className="space-y-3">
                   {plan.features.map((feature, idx) => (
@@ -459,9 +545,8 @@ export default function Pricing() {
                       className="feature-item flex items-start gap-3 text-sm text-white/70 leading-relaxed"
                     >
                       <span
-                        className={`flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${
-                          plan.popular ? 'bg-amber-400/20' : 'bg-white/10'
-                        }`}
+                        className={`flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${plan.popular ? 'bg-amber-400/20' : 'bg-white/10'
+                          }`}
                       >
                         <svg
                           width="10"
@@ -488,15 +573,14 @@ export default function Pricing() {
           <div className="grid md:grid-cols-[1fr_auto] gap-6 items-center">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-2">
-                Not sure which tier fits?
+                {bottomCtaTitle}
               </h3>
               <p className="text-white/60 leading-relaxed">
-                Book a free 30-minute systems audit. We&apos;ll map your current
-                operating layer and recommend the right starting point.
+                {bottomCtaDescription}
               </p>
             </div>
             <button className="group inline-flex items-center gap-3 bg-amber-400 text-black px-6 py-4 font-bold uppercase tracking-wider text-xs hover:bg-amber-300 transition-colors whitespace-nowrap">
-              <span>Book Free Audit</span>
+              <span>{bottomCtaButtonText}</span>
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
                 viewBox="0 0 24 24"
@@ -515,10 +599,10 @@ export default function Pricing() {
           <div className="grid md:grid-cols-[0.4fr_0.6fr] gap-12 md:gap-16">
             <div>
               <p className="font-mono text-xs font-bold uppercase text-amber-400 tracking-widest mb-4">
-                Questions / 질문
+                {faqSubtitle}
               </p>
               <h3 className="text-3xl md:text-4xl font-bold leading-tight">
-                Questions before the first system map.
+                {faqTitle}
               </h3>
             </div>
 
@@ -536,9 +620,8 @@ export default function Pricing() {
                       {faq.q}
                     </span>
                     <span
-                      className={`flex-shrink-0 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center transition-transform duration-300 ${
-                        openFaq === idx ? 'rotate-45 border-amber-400' : ''
-                      }`}
+                      className={`flex-shrink-0 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center transition-transform duration-300 ${openFaq === idx ? 'rotate-45 border-amber-400' : ''
+                        }`}
                     >
                       <svg
                         width="14"
@@ -554,11 +637,10 @@ export default function Pricing() {
                   </button>
 
                   <div
-                    className={`grid transition-all duration-500 ease-out ${
-                      openFaq === idx
-                        ? 'grid-rows-[1fr] opacity-100'
-                        : 'grid-rows-[0fr] opacity-0'
-                    }`}
+                    className={`grid transition-all duration-500 ease-out ${openFaq === idx
+                      ? 'grid-rows-[1fr] opacity-100'
+                      : 'grid-rows-[0fr] opacity-0'
+                      }`}
                   >
                     <div className="overflow-hidden">
                       <div className="px-5 md:px-6 pb-5 md:pb-6 text-sm text-white/60 leading-relaxed border-t border-white/10 pt-4">

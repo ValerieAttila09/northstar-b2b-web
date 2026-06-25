@@ -4,13 +4,42 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { INTEGRATIONS_CONTENT } from '../../lib/constants/en';
+import { INTEGRATIONS_CONTENT as EN_INTEGRATIONS_CONTENT } from '../../lib/constants/en';
 import Image from 'next/image';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function Integrations() {
+export default function Integrations({ content }) {
   const sectionRef = useRef(null);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
+  const headerMeta = t.integrations?.meta || 'Integrations';
+  const headerTitle = t.integrations?.title || 'Works with the tools you already use.';
+  const description = t.integrations?.shortDescription || '';
+  const statsRowData = Array.isArray(t.integrations?.stats)
+    ? t.integrations.stats
+    : Array.isArray(EN_INTEGRATIONS_CONTENT.stats_row_data)
+      ? EN_INTEGRATIONS_CONTENT.stats_row_data
+      : [];
+  const featuredBase = Array.isArray(content?.featured_integrations)
+    ? content.featured_integrations
+    : Array.isArray(EN_INTEGRATIONS_CONTENT.featured_integrations)
+      ? EN_INTEGRATIONS_CONTENT.featured_integrations
+      : [];
+  const featuredIntegrations = featuredBase.map((item, index) => ({
+    ...item,
+    name: t.integrations?.featuredIntegrations?.[index]?.name ?? item.name,
+    category: t.integrations?.featuredIntegrations?.[index]?.category ?? item.category,
+    categoryKr: t.integrations?.featuredIntegrations?.[index]?.categoryKr ?? item.categoryKr,
+    description: t.integrations?.featuredIntegrations?.[index]?.description ?? item.description,
+  }));
+  const ctaTitle = t.integrations?.ctaTitle || '';
+  const ctaDescription = t.integrations?.ctaDescription || '';
+  const ctaButtonText = t.integrations?.ctaButton || 'Request Integration';
+  const ctaSpanText = t.integrations?.ctaSpan || '';
+  const nativeIntegrationLabel = t.integrations?.nativeIntegration || 'Native integration';
 
   useGSAP(
     () => {
@@ -44,7 +73,7 @@ export default function Integrations() {
         };
 
         const createMarqueeTimeline = (selector) => {
-          const track = sectionRef.current?.querySelector(selector);
+          const track = document.querySelector(selector);
           if (!track) return null;
 
           const distance = getMarqueeDistance(track);
@@ -157,30 +186,28 @@ export default function Integrations() {
       <div className="integrations-header relative px-5 md:px-8 pt-20 md:pt-28 pb-12">
         <div className="mx-auto max-w-[1600px] text-center">
           <p className="font-mono text-xs font-bold uppercase text-signal-deep tracking-widest mb-6">
-            Integrations / 통합
+            {content?.integrations_meta ?? headerMeta}
           </p>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight max-w-4xl mx-auto">
-            Works with the tools
-            <br />
-            <span className="text-charcoal/30">you already use.</span>
-          </h2>
+          <h2
+            className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight max-w-4xl mx-auto"
+            dangerouslySetInnerHTML={{ __html: content?.integrations_title ?? headerTitle }}
+          />
           <p className="mt-6 text-lg text-charcoal/60 max-w-2xl mx-auto leading-relaxed">
-            Deep integrations with the most popular B2B software, CRMs, and
-            operational tools your team relies on.
+            {content?.short_description ?? description}
           </p>
         </div>
       </div>
 
       {/* Top Marquee */}
       <div className="relative border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-r from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-l from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-gradient-to-l from-bone to-transparent"/>
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-linear-to-r from-bone to-transparent" />
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-5 bg-linear-to-r from-bone to-transparent" />
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-linear-to-l from-bone to-transparent" />
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-5 bg-linear-to-l from-bone to-transparent" />
         <div className="overflow-hidden py-8">
           <div className="marquee-top-track flex gap-10 md:gap-12 w-max will-change-transform">
             <div className="flex shrink-0 gap-10 md:gap-12">
-              {INTEGRATIONS_CONTENT.top_integrations.map((item, idx) => (
+              {(content?.top_integrations ?? EN_INTEGRATIONS_CONTENT.top_integrations).map((item, idx) => (
                 <div
                   key={`top-${idx}`}
                   className="logo-item flex-shrink-0 w-20 h-20 p-2 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
@@ -190,7 +217,7 @@ export default function Integrations() {
               ))}
             </div>
             <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
-              {INTEGRATIONS_CONTENT.top_integrations.map((item, idx) => (
+              {(content?.top_integrations ?? EN_INTEGRATIONS_CONTENT.top_integrations).map((item, idx) => (
                 <div
                   key={`top-dup-${idx}`}
                   className="logo-item flex-shrink-0 w-20 h-20 p-2 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
@@ -207,18 +234,13 @@ export default function Integrations() {
       <div className="relative py-20 md:py-28 px-5 md:px-8">
         {/* Gradient blob */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-200/40 via-sky-200/30 to-rose-200/30 rounded-none blur-3xl" />
+          <div className="absolute inset-0 bg-linear-to-br from-amber-200/40 via-sky-200/30 to-rose-200/30 rounded-none blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-[1600px]">
           {/* Stats row */}
           <div className="stats-row grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mb-20">
-            {[
-              { value: '40+', label: 'Native integrations' },
-              { value: '<2h', label: 'Setup time' },
-              { value: '99.9%', label: 'Uptime SLA' },
-              { value: '2.4M', label: 'Records synced daily' },
-            ].map((stat, idx) => (
+            {(content?.stats_row_data ?? statsRowData).map((stat, idx) => (
               <div key={idx} className="stat-item text-center">
                 <div className="text-4xl md:text-5xl font-bold mb-2">{stat.value}</div>
                 <div className="text-xs text-charcoal/50 font-mono uppercase tracking-wider">
@@ -230,7 +252,7 @@ export default function Integrations() {
 
           {/* Featured integrations grid */}
           <div className="featured-grid grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-            {INTEGRATIONS_CONTENT.featured_integrations.map((integration, idx) => (
+            {featuredIntegrations.map((integration, idx) => (
               <div
                 key={idx}
                 className="featured-card group bg-white border border-charcoal/10 rounded-none p-6 md:p-8 hover:border-signal hover:shadow-xl transition-all duration-300 cursor-pointer"
@@ -259,7 +281,7 @@ export default function Integrations() {
                 </p>
                 <div className="mt-4 pt-4 border-t border-charcoal/10 flex items-center justify-between">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal/40">
-                    Native integration
+                    {nativeIntegrationLabel}
                   </span>
                   <svg
                     className="w-4 h-4 text-charcoal/40 group-hover:text-signal group-hover:translate-x-1 transition-all"
@@ -279,14 +301,14 @@ export default function Integrations() {
 
       {/* Bottom Marquee */}
       <div className="relative border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent"/>
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent"/>
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent"/>
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent" />
+        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent" />
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent" />
+        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent" />
         <div className="overflow-hidden py-8">
           <div className="marquee-bottom-track flex gap-10 md:gap-12 w-max will-change-transform">
             <div className="flex shrink-0 gap-10 md:gap-12">
-              {INTEGRATIONS_CONTENT.bottom_integrations.map((item, idx) => (
+              {(content?.bottom_integrations ?? EN_INTEGRATIONS_CONTENT.bottom_integrations).map((item, idx) => (
                 <div
                   key={`bottom-${idx}`}
                   className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
@@ -296,7 +318,7 @@ export default function Integrations() {
               ))}
             </div>
             <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
-              {INTEGRATIONS_CONTENT.bottom_integrations.map((item, idx) => (
+              {(content?.bottom_integrations ?? EN_INTEGRATIONS_CONTENT.bottom_integrations).map((item, idx) => (
                 <div
                   key={`bottom-dup-${idx}`}
                   className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
@@ -312,18 +334,16 @@ export default function Integrations() {
       {/* CTA Section */}
       <div className="integrations-cta relative px-5 md:px-8 py-20 md:py-24">
         <div className="mx-auto max-w-4xl text-center">
-          <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight mb-6">
-            Don&apos;t see your stack?
-            <br />
-            <span className="text-signal">We&apos;ll build the connector.</span>
-          </h3>
+          <h3
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight mb-6"
+            dangerouslySetInnerHTML={{ __html: content?.CTA?.title ?? ctaTitle }}
+          />
           <p className="text-lg text-charcoal/60 max-w-xl mx-auto leading-relaxed mb-10">
-            Enterprise tier includes custom integration development. We&apos;ve built
-            connectors for 40+ tools and counting.
+            {content?.CTA?.short_description ?? ctaDescription}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button className="group inline-flex items-center gap-3 bg-charcoal text-white px-8 py-4 font-bold uppercase tracking-wider text-sm hover:bg-signal hover:text-charcoal transition-all duration-300">
-              <span>Request Integration</span>
+              <span>{content?.CTA?.button_text ?? ctaButtonText}</span>
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
                 viewBox="0 0 24 24"
@@ -335,7 +355,7 @@ export default function Integrations() {
               </svg>
             </button>
             <span className="text-xs text-charcoal/40 font-mono">
-              Average build time: 2 weeks
+              {content?.CTA?.span_text ?? ctaSpanText}
             </span>
           </div>
         </div>

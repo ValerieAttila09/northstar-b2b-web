@@ -4,6 +4,8 @@ import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '../../context/LanguageContext';
+import messages from '../../i18n/messages';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -12,6 +14,8 @@ export default function Footer() {
   const marqueeRef = useRef(null);
   const [time, setTime] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const { language } = useLanguage();
+  const t = messages[language] || messages.en;
 
   useEffect(() => {
     const updateTime = () => {
@@ -142,11 +146,11 @@ export default function Footer() {
   };
 
   const navLinks = [
-    { href: '#platform', label: 'Platform' },
-    { href: '#about', label: 'About' },
-    { href: '#method', label: 'Method' },
+    { href: '#platform', label: t.nav.platform },
+    { href: '#about', label: t.nav.about },
+    { href: '#method', label: t.nav.method },
     { href: '#simulator', label: 'Scale Simulator' },
-    { href: '#qna', label: 'QNA' },
+    { href: '#qna', label: t.nav.qna },
   ];
 
   return (
@@ -194,8 +198,7 @@ export default function Footer() {
               Northstar
             </p>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/60">
-              Infrastructure strategy, data systems, and operational design for
-              B2B teams moving from traction to scale.
+              {t.footer.description}
             </p>
 
             {/* Live indicator */}
@@ -205,7 +208,7 @@ export default function Footer() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
               </span>
               <span className="font-mono text-xs text-white/40 uppercase tracking-wider">
-                Live · {time} JKT
+                {t.footer.live.replace('{time}', time)}
               </span>
             </div>
           </div>
@@ -213,7 +216,7 @@ export default function Footer() {
           {/* Contact column */}
           <div className="footer-col">
             <p className="mb-5 font-mono text-xs font-bold uppercase text-white/40 tracking-wider">
-              Contact
+              {t.footer.contact}
             </p>
             <div className="grid gap-3 text-sm leading-relaxed">
               <a
@@ -237,7 +240,7 @@ export default function Footer() {
           {/* Nav column */}
           <div className="footer-col">
             <p className="mb-5 font-mono text-xs font-bold uppercase text-white/40 tracking-wider">
-              Platform
+              {t.footer.navTitle}
             </p>
             <div className="grid gap-3">
               {navLinks.map((link) => (
@@ -256,8 +259,7 @@ export default function Footer() {
           {/* Info column */}
           <div className="footer-col flex flex-col justify-between gap-8 md:text-right">
             <p className="text-sm leading-relaxed text-white/60">
-              Selective partnerships for venture-backed B2B operators, funds,
-              and GTM teams.
+              {t.footer.info}
             </p>
 
             {/* Social links */}
@@ -289,7 +291,7 @@ export default function Footer() {
             onClick={scrollToTop}
             className="back-to-top group flex items-center gap-2 text-white/60 hover:text-amber-400 transition-colors"
           >
-            <span>Back to top</span>
+            <span>{t.footer.backToTop}</span>
             <svg
               className="w-4 h-4 transition-transform group-hover:-translate-y-1"
               viewBox="0 0 24 24"

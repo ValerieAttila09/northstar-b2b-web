@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import gsap from "gsap";
+import { getContent } from "../lib/constants";
 
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
@@ -22,8 +23,13 @@ import CTA from "../components/sections/CTA";
 import Pricing from "../components/sections/Pricing";
 import Integrations from "../components/sections/Integrations";
 import Steps from "../components/sections/Steps";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function HomePage() {
+  const { language } = useLanguage();
+
+  const content = useMemo(() => getContent(language), [language]);
+
   const playHeroAnimation = () => {
     gsap.fromTo(
       ".hero-reveal",
@@ -45,18 +51,18 @@ export default function HomePage() {
       <EntranceIntro onComplete={playHeroAnimation} />
       <Navbar />
       <SectionTransitions />
-      <Hero />
-      <Marquee />
-      <About />
-      <Features />
-      <Integrations />
-      <Simulator />
-      <Pricing />
-      <Steps />
-      <Testimonials />
-      <QNA />
-      <CTA />
-      <Footer />
+      <Hero content={content.HERO_CONTENT} />
+      <Marquee content={content.HERO_CONTENT} />
+      <About content={content.ABOUT_CONTENT} />
+      <Features content={content.FEATURES_CONTENT} />
+      <Integrations content={content.INTEGRATIONS_CONTENT} />
+      <Simulator content={content.SIMULATION_CONTENT} />
+      <Pricing content={content.PRICING_CONTENT} />
+      <Steps content={content.STEPS_CONTENT} />
+      <Testimonials content={content.TESTIMONIALS_CONTENT} />
+      <QNA content={content.QNA_CONTENT} />
+      <CTA content={content.CTA_CONTENT} />
+      <Footer content={content.FOOTER_CONTENT} />
     </main>
   );
 }
