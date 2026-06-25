@@ -1,6 +1,13 @@
-import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg"
-import imagePerson2 from "../../assets/images/testimonial-image-person-3.png"
-import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg"
+import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg";
+import imagePerson2 from "../../assets/images/testimonial-image-person-3.png";
+import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg";
+
+import integrationsIcon1 from "../../assets/icons/Salesforce/Salesforce_idN3OdcTG__1.png";
+import integrationsIcon2 from "../../assets/icons/Stripe/Stripe_Icon_3.jpeg";
+import integrationsIcon3 from "../../assets/icons/HubSpot/HubSpot_Symbol_3.png";
+import integrationsIcon4 from "../../assets/icons/Slack/Slack_Symbol_2.png";
+import integrationsIcon5 from "../../assets/icons/Segment/Segment_Symbol_7.png";
+import integrationsIcon6 from "../../assets/icons/Notion/Notion_Symbol_4.png";
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -79,36 +86,42 @@ export default {
     featuredIntegrations: [
       {
         name: 'Salesforce',
+        image: integrationsIcon1,
         category: 'CRM',
         categoryKr: '고객관리',
         description: 'Sync deals, contacts, and pipeline stages in real-time.'
       },
       {
         name: 'Stripe',
+        image: integrationsIcon2,
         category: 'Billing',
         categoryKr: '결제',
         description: 'Pull MRR, churn, and expansion revenue automatically.'
       },
       {
         name: 'HubSpot',
+        image: integrationsIcon3,
         category: 'Marketing',
         categoryKr: '마케팅',
         description: 'Connect attribution data to revenue outcomes.'
       },
       {
         name: 'Slack',
+        image: integrationsIcon4,
         category: 'Communication',
         categoryKr: '커뮤니케이션',
         description: 'Get daily operating signals in your team channel.'
       },
       {
         name: 'Segment',
+        image: integrationsIcon5,
         category: 'Data',
         categoryKr: '데이터',
         description: 'Ingest product usage events and map to accounts.'
       },
       {
         name: 'Notion',
+        image: integrationsIcon6,
         category: 'Workspace',
         categoryKr: '워크스페이스',
         description: 'Embed live operating dashboards in your docs.'

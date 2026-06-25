@@ -31,6 +31,7 @@ export default function Integrations({ content }) {
   const featuredIntegrations = featuredBase.map((item, index) => ({
     ...item,
     name: t.integrations?.featuredIntegrations?.[index]?.name ?? item.name,
+    image: t.integrations?.featuredIntegrations?.[index]?.image ?? item.image,
     category: t.integrations?.featuredIntegrations?.[index]?.category ?? item.category,
     categoryKr: t.integrations?.featuredIntegrations?.[index]?.categoryKr ?? item.categoryKr,
     description: t.integrations?.featuredIntegrations?.[index]?.description ?? item.description,
@@ -276,10 +277,8 @@ export default function Integrations({ content }) {
                 className="featured-card group bg-white border border-charcoal/10 rounded-none p-6 md:p-8 hover:border-signal hover:shadow-xl transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div
-                    className={`w-14 h-14 ${integration.color} rounded-none flex items-center justify-center text-white font-bold text-2xl shadow-md flex-shrink-0`}
-                  >
-                    {integration.letter}
+                  <div className="size-14 relative">
+                    <Image src={integration.image} alt={`Image-${idx}`} height={56} width={56} className="h-full w-auto" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xl font-bold mb-1">{integration.name}</h3>

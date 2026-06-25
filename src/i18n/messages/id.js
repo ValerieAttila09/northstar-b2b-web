@@ -1,6 +1,13 @@
-import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg"
-import imagePerson2 from "../../assets/images/testimonial-image-person-3.png"
-import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg"
+import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg";
+import imagePerson2 from "../../assets/images/testimonial-image-person-3.png";
+import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg";
+
+import integrationsIcon1 from "../../assets/icons/Salesforce/Salesforce_idN3OdcTG__1.png";
+import integrationsIcon2 from "../../assets/icons/Stripe/Stripe_Icon_3.jpeg";
+import integrationsIcon3 from "../../assets/icons/HubSpot/HubSpot_Symbol_3.png";
+import integrationsIcon4 from "../../assets/icons/Slack/Slack_Symbol_2.png";
+import integrationsIcon5 from "../../assets/icons/Segment/Segment_Symbol_7.png";
+import integrationsIcon6 from "../../assets/icons/Notion/Notion_Symbol_4.png";
 
 /* eslint-disable import/no-anonymous-default-export */
 export default {
@@ -79,36 +86,42 @@ export default {
     featuredIntegrations: [
       {
         name: 'Salesforce',
+        image: integrationsIcon1,
         category: 'CRM',
         categoryKr: 'Manajemen Pelanggan',
         description: 'Sinkronisasikan kesepakatan, kontak, dan tahapan pipeline secara real-time.'
       },
       {
         name: 'Stripe',
+        image: integrationsIcon2,
         category: 'Penagihan',
         categoryKr: 'Penagihan',
         description: 'Tarik MRR, churn, dan pendapatan ekspansi secara otomatis.'
       },
       {
         name: 'HubSpot',
+        image: integrationsIcon3,
         category: 'Pemasaran',
         categoryKr: 'Pemasaran',
         description: 'Hubungkan data atribusi ke hasil pendapatan.'
       },
       {
         name: 'Slack',
+        image: integrationsIcon4,
         category: 'Komunikasi',
         categoryKr: 'Komunikasi',
         description: 'Dapatkan sinyal operasi harian di saluran tim Anda.'
       },
       {
         name: 'Segment',
+        image: integrationsIcon5,
         category: 'Data',
         categoryKr: 'Data',
         description: 'Masukkan peristiwa penggunaan produk dan petakan ke akun.'
       },
       {
         name: 'Notion',
+        image: integrationsIcon6,
         category: 'Ruang Kerja',
         categoryKr: 'Ruang Kerja',
         description: 'Sematkan dasbor operasi langsung di dokumen Anda.'
