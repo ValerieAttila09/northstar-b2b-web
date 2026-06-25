@@ -249,7 +249,7 @@ export default function Steps({ content }) {
         stackPosition="15%"
         scaleEndPosition="8%"
         baseScale={0.88}
-        blurAmount={2}
+        blurAmount={0}
       >
         {steps.map((step, idx) => (
           <ScrollStackItem key={`step-${language}-${idx}`}>

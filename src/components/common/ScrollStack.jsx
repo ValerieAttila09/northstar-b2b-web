@@ -6,7 +6,7 @@ export const ScrollStackItem = ({ children, itemClassName = '' }) => (
     className={`scroll-stack-card relative w-full my-8 p-8 md:p-12 shadow-[0_0_60px_rgba(0,0,0,0.5)] box-border origin-top will-change-transform border border-white/10 bg-neutral-900 ${itemClassName}`.trim()}
     style={{
       backfaceVisibility: 'hidden',
-      transformStyle: 'preserve-3d'
+      // transformStyle: 'preserve-3d'
     }}
   >
     {children}
@@ -159,29 +159,23 @@ const ScrollStack = ({
         translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
       }
 
-      const newTransform = {
-        translateY: Math.round(translateY * 100) / 100,
-        scale: Math.round(scale * 1000) / 1000,
-        rotation: Math.round(rotation * 100) / 100,
-        blur: Math.round(blur * 100) / 100
-      };
-
+      // ✅ OPTIMASI: Cek perubahan lebih sederhana
       const lastTransform = lastTransformsRef.current.get(i);
-      const hasChanged =
-        !lastTransform ||
-        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
-        Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
-        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
-        Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
+      const diffY = lastTransform ? Math.abs(lastTransform.translateY - translateY) : 999;
+      const diffScale = lastTransform ? Math.abs(lastTransform.scale - scale) : 999;
 
-      if (hasChanged) {
-        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
-        const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
+      // Hanya update jika ada perubahan signifikan
+      if (diffY > 0.5 || diffScale > 0.001) {
+        // ✅ OPTIMASI: Gunakan string template yang lebih cepat
+        card.style.transform = `translate3d(0,${translateY}px,0) scale(${scale})`;
 
-        card.style.transform = transform;
-        card.style.filter = filter;
+        if (blurAmount && blur > 0) {
+          card.style.filter = `blur(${blur}px)`;
+        } else if (blurAmount && card.style.filter) {
+          card.style.filter = '';
+        }
 
-        lastTransformsRef.current.set(i, newTransform);
+        lastTransformsRef.current.set(i, { translateY, scale, blur });
       }
 
       if (i === cardsRef.current.length - 1) {
@@ -196,7 +190,20 @@ const ScrollStack = ({
     });
 
     isUpdatingRef.current = false;
-  }, [itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, rotationAmount, blurAmount, onStackComplete, calculateProgress, parsePercentage, getScrollData, getElementOffset]);
+  }, [
+    itemScale,
+    itemStackDistance,
+    stackPosition,
+    scaleEndPosition,
+    baseScale,
+    rotationAmount,
+    blurAmount,
+    onStackComplete,
+    calculateProgress,
+    parsePercentage,
+    getScrollData,
+    getElementOffset,
+  ]);
 
   const handleScroll = useCallback(() => {
     if (!tickingRef.current) {
@@ -210,6 +217,7 @@ const ScrollStack = ({
 
   const setupLenis = useCallback(() => {
     if (useWindowScroll) {
+      // Cek apakah sudah ada instance Lenis global
       const globalLenis = typeof window !== 'undefined' ? window.__lenis : null;
 
       if (globalLenis) {
@@ -219,10 +227,36 @@ const ScrollStack = ({
         return null;
       }
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      scrollListenerRef.current = handleScroll;
-      return null;
+      // ✅ PERBAIKAN: Buat instance Lenis global jika belum ada
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2,
+        infinite: false,
+        wheelMultiplier: 1,
+        lerp: 0.1,
+        syncTouch: true,
+      });
+
+      // Simpan sebagai global Lenis agar bisa dipakai komponen lain
+      if (typeof window !== 'undefined') {
+        window.__lenis = lenis;
+      }
+
+      lenis.on('scroll', handleScroll);
+
+      const raf = (time) => {
+        lenis.raf(time);
+        animationFrameRef.current = requestAnimationFrame(raf);
+      };
+      animationFrameRef.current = requestAnimationFrame(raf);
+
+      lenisRef.current = lenis;
+      lenisOwnerRef.current = true;
+      return lenis;
     } else {
+      // ... kode existing untuk scroller internal ...
       const scroller = scrollerRef.current;
       if (!scroller) return;
 
@@ -230,19 +264,19 @@ const ScrollStack = ({
         wrapper: scroller,
         content: scroller.querySelector('.scroll-stack-inner'),
         duration: 1.2,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         touchMultiplier: 2,
         infinite: false,
         wheelMultiplier: 1,
         lerp: 0.1,
         syncTouch: true,
-        syncTouchLerp: 0.075
+        syncTouchLerp: 0.075,
       });
 
       lenis.on('scroll', handleScroll);
 
-      const raf = time => {
+      const raf = (time) => {
         lenis.raf(time);
         animationFrameRef.current = requestAnimationFrame(raf);
       };
