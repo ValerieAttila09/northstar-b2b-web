@@ -79,9 +79,27 @@ export default function Integrations({ content }) {
           const distance = getMarqueeDistance(track);
           if (!distance) return null;
 
-          const timeline = gsap.timeline({ repeat: -1, repeatRefresh: true });
-          timeline.to(track, { x: -distance, duration: 22, ease: 'none' }).set(track, { x: 0 });
-          return timeline;
+          const isTopMarquee = selector === '.marquee-top-track';
+
+          if (isTopMarquee) {
+            // Top marquee: bergerak ke KIRI
+            // Mulai dari 0, animasi ke -distance, reset ke 0
+            gsap.set(track, { x: 0 });
+            const timeline = gsap.timeline({ repeat: -1 });
+            timeline
+              .to(track, { x: -distance, duration: 22, ease: 'none' })
+              .set(track, { x: 0 });
+            return timeline;
+          } else {
+            // Bottom marquee: bergerak ke KANAN
+            // Mulai dari -distance, animasi ke 0, reset ke -distance
+            gsap.set(track, { x: -distance });
+            const timeline = gsap.timeline({ repeat: -1 });
+            timeline
+              .to(track, { x: 0, duration: 22, ease: 'none' })
+              .set(track, { x: -distance });
+            return timeline;
+          }
         };
 
         createMarqueeTimeline('.marquee-top-track');
@@ -302,25 +320,25 @@ export default function Integrations({ content }) {
       {/* Bottom Marquee */}
       <div className="relative border-y border-charcoal/10 bg-white/50 backdrop-blur-sm">
         <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent" />
-        <div className="absolute left-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-r from-bone to-transparent" />
         <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent" />
-        <div className="absolute right-0 inset-y-0 w-1/3 h-full z-1 bg-linear-to-l from-bone to-transparent" />
+
         <div className="overflow-hidden py-8">
           <div className="marquee-bottom-track flex gap-10 md:gap-12 w-max will-change-transform">
-            <div className="flex shrink-0 gap-10 md:gap-12">
+            <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
               {(content?.bottom_integrations ?? EN_INTEGRATIONS_CONTENT.bottom_integrations).map((item, idx) => (
                 <div
-                  key={`bottom-${idx}`}
+                  key={`bottom-dup-${idx}`}
                   className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
                 >
                   <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />
                 </div>
               ))}
             </div>
-            <div className="flex shrink-0 gap-10 md:gap-12" aria-hidden="true">
+
+            <div className="flex shrink-0 gap-10 md:gap-12">
               {(content?.bottom_integrations ?? EN_INTEGRATIONS_CONTENT.bottom_integrations).map((item, idx) => (
                 <div
-                  key={`bottom-dup-${idx}`}
+                  key={`bottom-${idx}`}
                   className="logo-item p-2 flex-shrink-0 w-20 h-20 bg-white border border-charcoal/10 rounded-none flex items-center justify-center shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
                 >
                   <Image src={item.image} alt={item.name} width={40} height={40} className="w-auto h-full" />

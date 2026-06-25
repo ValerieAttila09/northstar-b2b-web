@@ -246,7 +246,7 @@ export default function Navbar() {
                 onMouseLeave={() => resetElement(linkRefs.current[index])}
                 className="text-micro font-bold uppercase text-charcoal/80"
               >
-                {t.nav[link.key]}  {/* ← Ganti dari {link.label} */}
+                {t.nav[link.key]}
               </a>
             ))}
           </div>
@@ -254,10 +254,10 @@ export default function Navbar() {
             <button
               type="button"
               onClick={toggleLanguage}
-              className="hidden rounded-full border border-charcoal/20 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal/80 transition-colors duration-300 hover:bg-charcoal hover:text-inverse lg:inline-flex"
+              className="hidden lg:flex size-12 bg-bone items-center justify-center text-center border border-charcoal/20 px-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-charcoal/80 transition-colors duration-300 hover:bg-charcoal hover:text-inverse hover:border-muted"
               aria-label={t.nav.switchLanguage}
             >
-              {language === 'id' ? 'EN' : 'ID'}
+              <span>{language === 'id' ? 'EN' : 'ID'}</span>
             </button>
             <a
               ref={ctaRef}

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLanguage } from "../../context/LanguageContext";
 import messages from "../../i18n/messages";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -13,20 +14,23 @@ const defaultTestimonials = [
   {
     quote:
       "Northstar gave our leadership team a single operating view without forcing every department into a heavy platform migration.",
-    name: "Maya Santoso",
-    role: "COO, Ledgerbase"
+    name: "Jonathan Rodriguez",
+    role: "COO, Ledgerbase",
+    image: "../../assets/images/testimonial-image-person-1.jpg"
   },
   {
     quote:
       "The work felt closer to architecture than consulting. Every metric, ritual, and workflow had a clear reason to exist.",
     name: "Daniel Cho",
-    role: "Partner, Meridian Ventures"
+    role: "Partner, Meridian Ventures",
+    image: "../../assets/images/testimonial-image-person-3.png"
   },
   {
     quote:
       "We reduced decision latency in expansion planning from weeks to days. The system is sharp, minimal, and usable.",
     name: "Leila Hart",
-    role: "VP Revenue, AtlasOps"
+    role: "VP Revenue, AtlasOps",
+    image: "../../assets/images/testimonial-image-person-2.jpg"
   }
 ];
 
@@ -84,8 +88,13 @@ export default function Testimonials({ content }) {
                 <span className="font-display text-7xl leading-none text-charcoal/18">0{index + 1}</span>
                 <div>
                   <p className="mb-12 text-2xl leading-tight md:text-3xl">&quot;{item.quote}&quot;</p>
-                  <p className="text-micro font-bold uppercase text-charcoal">{item.name}</p>
-                  <p className="mt-2 text-sm leading-6 text-muted">{item.role}</p>
+                  <div className="flex items-center justify-start gap-2">
+                    <Image src={item.image} alt={item.name} width={48} height={48} className="border border-line size-12" />
+                    <div className="">
+                      <p className="text-micro font-bold uppercase text-charcoal">{item.name}</p>
+                      <p className="mt-2 text-sm leading-6 text-muted">{item.role}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </article>

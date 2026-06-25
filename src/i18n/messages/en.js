@@ -1,3 +1,8 @@
+import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg"
+import imagePerson2 from "../../assets/images/testimonial-image-person-3.png"
+import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg"
+
+/* eslint-disable import/no-anonymous-default-export */
 export default {
   nav: {
     platform: 'Platform',
@@ -313,17 +318,20 @@ export default {
       {
         quote: 'Northstar gave our leadership team a single operating view without forcing every department into a heavy platform migration.',
         name: 'Maya Santoso',
-        role: 'COO, Ledgerbase'
+        role: 'COO, Ledgerbase',
+        image: imagePerson1
       },
       {
         quote: 'The work felt closer to architecture than consulting. Every metric, ritual, and workflow had a clear reason to exist.',
         name: 'Daniel Cho',
-        role: 'Partner, Meridian Ventures'
+        role: 'Partner, Meridian Ventures',
+        image: imagePerson2
       },
       {
         quote: 'We reduced decision latency in expansion planning from weeks to days. The system is sharp, minimal, and usable.',
         name: 'Leila Hart',
-        role: 'VP Revenue, AtlasOps'
+        role: 'VP Revenue, AtlasOps',
+        image: imagePerson3
       }
     ]
   },

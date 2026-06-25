@@ -1,3 +1,8 @@
+import imagePerson1 from "../../assets/images/testimonial-image-person-1.jpg"
+import imagePerson2 from "../../assets/images/testimonial-image-person-3.png"
+import imagePerson3 from "../../assets/images/testimonial-image-person-2.jpg"
+
+/* eslint-disable import/no-anonymous-default-export */
 export default {
   nav: {
     platform: 'Platform',
@@ -23,7 +28,7 @@ export default {
     sectionMeta: 'Tentang perusahaan / 회사의 구조',
     founderProfile: 'Profil pendiri / 창업자',
     collaboratorLabel: 'Kolaborator',
-    founderDescription: 'Mantan mitra operasi dan arsitek sistem untuk perusahaan scale-up B2B di seluruh Asia Tenggara (SEA) dan AS.',
+    founderDescription: 'Mantan mitra operasi dan arsitek sistem untuk perusahaan scale-up B2B di seluruh Asia Tenggara (SEA) dan Korea.',
     title: 'Dibangun oleh para praktisi yang lebih memilih <span className="text-signal">sistem</span> daripada sensasi.',
     descriptions: [
       'Northstar didirikan untuk membantu perusahaan B2B ambisius melewati fase pertengahan yang kacau: tahap di mana dasbor berlipat ganda, ritme kepemimpinan terganggu, dan setiap tim menciptakan versi kebenarannya masing-masing.',
@@ -109,7 +114,7 @@ export default {
         description: 'Sematkan dasbor operasi langsung di dokumen Anda.'
       }
     ],
-    ctaTitle: 'Tidak melihat ekosistem alat Anda? <br /> <span className="text-signal">Kami akan membangun konektornya.</span>',
+    ctaTitle: 'Tidak melihat Stack Anda? <br /> <span className="text-signal">Kami akan membangun konektornya.</span>',
     ctaDescription: 'Paket Enterprise mencakup pengembangan integrasi kustom. Kami telah membangun konektor untuk 40+ alat dan terus bertambah.',
     ctaButton: 'Ajukan Integrasi',
     ctaSpan: 'Rata-rata waktu pembuatan: 2 minggu',
@@ -313,17 +318,20 @@ export default {
       {
         quote: 'Northstar memberi tim pimpinan kami satu tampilan operasi tunggal tanpa memaksa setiap departemen menjalani migrasi platform yang berat.',
         name: 'Maya Santoso',
-        role: 'COO, Ledgerbase'
+        role: 'COO, Ledgerbase',
+        image: imagePerson1
       },
       {
         quote: 'Pekerjaannya terasa lebih dekat ke arsitektur daripada konsultasi. Setiap metrik, ritual, dan alur kerja punya alasan jelas untuk ada.',
         name: 'Daniel Cho',
-        role: 'Partner, Meridian Ventures'
+        role: 'Partner, Meridian Ventures',
+        image: imagePerson2
       },
       {
         quote: 'Kami mengurangi latensi keputusan dalam perencanaan ekspansi dari berminggu-minggu menjadi beberapa hari. Sistemnya tajam, minimal, dan mudah dipakai.',
         name: 'Leila Hart',
-        role: 'VP Revenue, AtlasOps'
+        role: 'VP Revenue, AtlasOps',
+        image: imagePerson3
       }
     ]
   },
@@ -337,21 +345,21 @@ export default {
         title: 'Hubungkan stack Anda.',
         titleKr: '스택 연결',
         subtitle: 'Hubungkan alat Anda yang sudah ada dalam hitungan menit.',
-        description: 'Northstar terintegrasi dengan CRM, penagihan, dan sumber data Anda tanpa perlu mengganti sistem. Kami membaca data yang sudah ada untuk membangun tampilan operasi.',
+        description: 'Northstar terintegrasi dengan CRM, billing, dan sumber data Anda tanpa perlu mengganti sistem. Kami membaca data yang sudah ada untuk membangun tampilan operasi.',
         features: [
-          'Integrasi bawaan dengan 40+ alat',
+          'Integrasi bawaan dengan 40+ tools',
           'Pengaturan dalam waktu kurang dari 2 jam',
           'Tidak perlu migrasi data',
           'Sinkronisasi real-time antar sistem'
         ],
         visual: {
-          label: 'Lapisan Koneksi',
+          label: 'Connection Layer',
           labelKr: '연결 계층',
           items: [
-            { name: 'Salesforce', status: 'Terkoneksi', color: 'bg-blue-500' },
-            { name: 'Stripe', status: 'Terkoneksi', color: 'bg-violet-500' },
-            { name: 'HubSpot', status: 'Menyinkronkan', color: 'bg-orange-500' },
-            { name: 'Slack', status: 'Terkoneksi', color: 'bg-emerald-500' }
+            { name: 'Salesforce', status: 'Connected', color: 'bg-blue-500' },
+            { name: 'Stripe', status: 'Connected', color: 'bg-violet-500' },
+            { name: 'HubSpot', status: 'Syncing', color: 'bg-orange-500' },
+            { name: 'Slack', status: 'Connected', color: 'bg-emerald-500' }
           ]
         }
       },
