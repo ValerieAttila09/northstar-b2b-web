@@ -181,7 +181,7 @@ export default function Footer() {
               </span>
               <span className="text-amber-400 text-2xl">✦</span>
               <span className="text-2xl md:text-4xl font-bold text-white/20">
-                JAKARTA / SINGAPORE
+                JAKARTA / SEOUL
               </span>
               <span className="text-amber-400 text-2xl"></span>
             </div>
@@ -233,7 +233,7 @@ export default function Footer() {
                 <span className="link-line absolute bottom-0 left-0 h-px w-0 bg-amber-400 transition-all"></span>
                 +62 811 880 1926
               </a>
-              <span className="text-white/70">Jakarta / Singapore</span>
+              <span className="text-white/70">Jakarta / Seoul</span>
             </div>
           </div>
 
