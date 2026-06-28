@@ -595,6 +595,7 @@ export default function Pricing({ content }) {
         </div>
 
         {/* FAQ Section */}
+        {/*
         <div className="faq-section mt-24 md:mt-32">
           <div className="grid md:grid-cols-[0.4fr_0.6fr] gap-12 md:gap-16">
             <div>
@@ -653,6 +654,7 @@ export default function Pricing({ content }) {
             </div>
           </div>
         </div>
+        */}
       </div>
     </section>
   );
